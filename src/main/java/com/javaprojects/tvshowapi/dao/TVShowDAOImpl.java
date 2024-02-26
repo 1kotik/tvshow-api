@@ -1,6 +1,8 @@
 package com.javaprojects.tvshowapi.dao;
 
 import com.javaprojects.tvshowapi.entity.TVShow;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -13,9 +15,13 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
+@AllArgsConstructor
+@NoArgsConstructor
 public class TVShowDAOImpl implements TVShowDAO {
     private static final String API_URL = "https://www.episodate.com/api/search";
+    Logger logger;
 
     @Override
     public List<TVShow> searchByTitle(String title) throws IOException {
@@ -24,7 +30,7 @@ public class TVShowDAOImpl implements TVShowDAO {
         String url = String.format("%s?q=%s",API_URL ,URLEncoder.encode(title, StandardCharsets.UTF_8));
         try {
 
-            // Выполнение HTTP GET запроса
+            // Выполнение GET запроса
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder().url(url).build();
             Response response = client.newCall(request).execute();
@@ -37,7 +43,7 @@ public class TVShowDAOImpl implements TVShowDAO {
                 JSONObject jsonObject = new JSONObject(jsonResponse);
                 JSONArray showsArray = jsonObject.getJSONArray("tv_shows");
 
-                // Преобразование данных в объекты Series
+                // Преобразование данных в объекты TVShow
                 for (int i = 0; i < showsArray.length(); i++) {
                     JSONObject showObject = showsArray.getJSONObject(i);
                     TVShow tvShow = new TVShow();
@@ -53,7 +59,7 @@ public class TVShowDAOImpl implements TVShowDAO {
                     results.add(tvShow);
                 }
             } else {
-                System.err.println("Error: HTTP request failed with code " + response.code());
+                 logger.log(Level.INFO, "Error: HTTP request failed with code " + response.code());
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
