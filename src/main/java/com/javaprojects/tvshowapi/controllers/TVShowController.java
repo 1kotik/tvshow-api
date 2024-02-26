@@ -2,7 +2,6 @@ package com.javaprojects.tvshowapi.controllers;
 
 import com.javaprojects.tvshowapi.entity.TVShow;
 import com.javaprojects.tvshowapi.services.TVShowService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

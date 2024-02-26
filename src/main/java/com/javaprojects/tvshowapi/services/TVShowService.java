@@ -3,8 +3,6 @@ package com.javaprojects.tvshowapi.services;
 
 import com.javaprojects.tvshowapi.dao.TVShowDAOImpl;
 import com.javaprojects.tvshowapi.entity.TVShow;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
