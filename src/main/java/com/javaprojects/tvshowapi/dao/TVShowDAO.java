@@ -7,4 +7,4 @@ import java.util.List;
 
 public interface TVShowDAO {
     List<TVShow> searchByTitle(String name) throws IOException;
-}
+} 
