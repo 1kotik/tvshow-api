@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.logging.Logger;
 
 @Configuration
 public class TVShowConfiguration {
@@ -19,9 +18,5 @@ public class TVShowConfiguration {
         return new RestTemplate();
     }
 
-    @Bean
-    public Logger logger() {
-        return Logger.getLogger(getClass().getName());
-    }
 
 }

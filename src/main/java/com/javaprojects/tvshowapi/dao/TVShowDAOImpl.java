@@ -1,8 +1,6 @@
 package com.javaprojects.tvshowapi.dao;
 
 import com.javaprojects.tvshowapi.entity.TVShow;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -15,13 +13,10 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-@AllArgsConstructor
-@NoArgsConstructor
+
+
 public class TVShowDAOImpl implements TVShowDAO {
     private static final String API_URL = "https://www.episodate.com/api/search";
-    Logger logger;
 
     @Override
     public List<TVShow> searchByTitle(String title) throws IOException {
@@ -58,8 +53,6 @@ public class TVShowDAOImpl implements TVShowDAO {
                     tvShow.setImageThumbnailPath(showObject.optString("image_thumbnail_path", null));
                     results.add(tvShow);
                 }
-            } else {
-                 logger.log(Level.INFO, "Error: HTTP request failed with code " + response.code());
             }
         } catch (IOException | JSONException e) {
             e.printStackTrace();
