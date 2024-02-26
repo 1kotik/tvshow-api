@@ -7,7 +7,7 @@ REST API for searching information about TV Shows.
 - [Technologies](#technologies)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Example](#example)
+- [JSON Example](#json-example)
 ## Functional
 - Searching TV Shows by title
 - Returning results in JSON format
@@ -40,14 +40,23 @@ In browser (or platforms for using APIs (Postman)):
 http://localhost:8080/tvshows?title={your-title}
 ```
 
-## Example
-### Type Request in Postman:
+## JSON Example
 
-![img.png](img.png)
-
-### Get JSON:
-
-![img_1.png](img_1.png)
+```json
+[
+    {
+        "id": 20177,
+        "title": "Severance",
+        "permalink": "perseverance",
+        "startDate": "2022-02-18",
+        "endDate": null,
+        "country": "UK",
+        "network": "Apple TV+",
+        "status": "Running",
+        "imageThumbnailPath": "https://static.episodate.com/images/tv-show/thumbnail/20177.jpg"
+    }
+]
+```
 
 
 
