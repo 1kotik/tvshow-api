@@ -13,11 +13,16 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TVShowDAOImpl implements TVShowDAO {
     private static final String API_URL = "https://www.episodate.com/api/search";
+    private Logger logger;
 
+    public TVShowDAOImpl(Logger logger){
+        this.logger=logger;
+    }
     @Override
     public List<TVShow> searchByTitle(String title) throws IOException {
         List<TVShow> results = new ArrayList<>();
@@ -55,7 +60,7 @@ public class TVShowDAOImpl implements TVShowDAO {
                 }
             }
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, e.getMessage());
         }
 
         return results;
