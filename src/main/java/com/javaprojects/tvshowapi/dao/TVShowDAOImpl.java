@@ -55,7 +55,7 @@ public class TVShowDAOImpl implements TVShowDAO {
                 }
             }
         } catch (IOException | JSONException e) {
-            e.printStackTrace();
+
         }
 
         return results;

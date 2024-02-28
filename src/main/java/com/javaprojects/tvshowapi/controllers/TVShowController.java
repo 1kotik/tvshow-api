@@ -2,7 +2,6 @@ package com.javaprojects.tvshowapi.controllers;
 
 import com.javaprojects.tvshowapi.entity.TVShow;
 import com.javaprojects.tvshowapi.services.TVShowService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -14,7 +13,6 @@ public class TVShowController {
 
     private TVShowService tvShowService;
 
-    @Autowired
     public TVShowController(TVShowService tvShowService){
         this.tvShowService=tvShowService;
     }
