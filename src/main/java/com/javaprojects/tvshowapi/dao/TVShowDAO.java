@@ -27,7 +27,7 @@ public class TVShowDAO {
 
     public List<TVShow> searchByTitle(String title) throws IOException {
         List<TVShow> results = new ArrayList<>();
-        if(title==null) title="";
+        if (title == null) title = "";
         String url = String.format("%s?q=%s", API_URL, URLEncoder.encode(title, StandardCharsets.UTF_8));
         try {
 
