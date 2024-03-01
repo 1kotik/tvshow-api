@@ -13,9 +13,10 @@ import java.util.List;
 public class TVShowService {
     private TVShowDAO tvShowDAO;
 
-    public TVShowService(TVShowDAO tvShowDAO){
-        this.tvShowDAO=tvShowDAO;
+    public TVShowService(TVShowDAO tvShowDAO) {
+        this.tvShowDAO = tvShowDAO;
     }
+
     public List<TVShow> searchByTitle(String title) throws IOException {
         return tvShowDAO.searchByTitle(title);
     }

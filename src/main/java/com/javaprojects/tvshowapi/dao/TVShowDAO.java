@@ -24,10 +24,10 @@ public class TVShowDAO {
         this.logger = logger;
     }
 
-    
+
     public List<TVShow> searchByTitle(String title) throws IOException {
         List<TVShow> results = new ArrayList<>();
-
+        if(title==null) title="";
         String url = String.format("%s?q=%s", API_URL, URLEncoder.encode(title, StandardCharsets.UTF_8));
         try {
 
@@ -63,7 +63,7 @@ public class TVShowDAO {
         } catch (IOException | JSONException e) {
             logger.log(Level.INFO, e.getMessage());
         }
-
+        logger.log(Level.INFO, "Success");
         return results;
     }
 }

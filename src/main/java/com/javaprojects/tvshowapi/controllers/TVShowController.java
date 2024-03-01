@@ -19,8 +19,7 @@ public class TVShowController {
 
     @GetMapping
     public List<TVShow> searchByTitle(@RequestParam(required = false) String title) throws IOException {
-        if (title != null) return tvShowService.searchByTitle(title);
-        else return tvShowService.searchByTitle("");
+        return tvShowService.searchByTitle(title);
     }
 
 }

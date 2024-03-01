@@ -10,12 +10,12 @@ import java.util.logging.Logger;
 @Configuration
 public class TVShowConfiguration {
     @Bean
-    public TVShowDAO tvShowDAOImpl(){
+    public TVShowDAO tvShowDAOImpl() {
         return new TVShowDAO(logger());
     }
 
     @Bean
-    public Logger logger(){
+    public Logger logger() {
         return Logger.getLogger(getClass().getName());
     }
 
