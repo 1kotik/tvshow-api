@@ -1,6 +1,6 @@
 package com.javaprojects.tvshowapi.configs;
 
-import com.javaprojects.tvshowapi.dao.TVShowDAOImpl;
+import com.javaprojects.tvshowapi.dao.TVShowDAO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,8 +10,8 @@ import java.util.logging.Logger;
 @Configuration
 public class TVShowConfiguration {
     @Bean
-    public TVShowDAOImpl tvShowDAOImpl(){
-        return new TVShowDAOImpl(logger());
+    public TVShowDAO tvShowDAOImpl(){
+        return new TVShowDAO(logger());
     }
 
     @Bean

@@ -16,11 +16,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TVShowDAOImpl {
+public class TVShowDAO {
     private static final String API_URL = "https://www.episodate.com/api/search";
     private Logger logger;
 
-    public TVShowDAOImpl(Logger logger) {
+    public TVShowDAO(Logger logger) {
         this.logger = logger;
     }
 
