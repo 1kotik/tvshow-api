@@ -48,8 +48,8 @@ public class TVShowDAO {
                 for (int i = 0; i < showsArray.length(); i++) {
                     JSONObject showObject = showsArray.getJSONObject(i);
                     TVShow tvShow = new TVShow();
-                    tvShow.setId(showObject.optInt("id", i + 1));                  //optInt для случая, если у ключа нет данных (null)
-                    tvShow.setTitle(showObject.optString("name", null));        //optString аналогично
+                    tvShow.setId(showObject.optInt("id", i + 1));                
+                    tvShow.setTitle(showObject.optString("name", null));
                     tvShow.setPermalink(showObject.optString("permalink", null));
                     tvShow.setStartDate(showObject.optString("start_date", null));
                     tvShow.setEndDate(showObject.optString("end_date", null));
