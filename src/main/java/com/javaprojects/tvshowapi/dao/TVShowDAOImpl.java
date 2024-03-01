@@ -16,18 +16,19 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TVShowDAOImpl implements TVShowDAO {
+public class TVShowDAOImpl {
     private static final String API_URL = "https://www.episodate.com/api/search";
     private Logger logger;
 
-    public TVShowDAOImpl(Logger logger){
-        this.logger=logger;
+    public TVShowDAOImpl(Logger logger) {
+        this.logger = logger;
     }
-    @Override
+
+    
     public List<TVShow> searchByTitle(String title) throws IOException {
         List<TVShow> results = new ArrayList<>();
 
-        String url = String.format("%s?q=%s",API_URL ,URLEncoder.encode(title, StandardCharsets.UTF_8));
+        String url = String.format("%s?q=%s", API_URL, URLEncoder.encode(title, StandardCharsets.UTF_8));
         try {
 
             // Выполнение GET запроса
@@ -47,11 +48,11 @@ public class TVShowDAOImpl implements TVShowDAO {
                 for (int i = 0; i < showsArray.length(); i++) {
                     JSONObject showObject = showsArray.getJSONObject(i);
                     TVShow tvShow = new TVShow();
-                    tvShow.setId(showObject.optInt("id",i+1));                  //optInt для случая, если у ключа нет данных (null)
+                    tvShow.setId(showObject.optInt("id", i + 1));                  //optInt для случая, если у ключа нет данных (null)
                     tvShow.setTitle(showObject.optString("name", null));        //optString аналогично
                     tvShow.setPermalink(showObject.optString("permalink", null));
-                    tvShow.setStartDate(showObject.optString("start_date",null));
-                    tvShow.setEndDate(showObject.optString("end_date",null));
+                    tvShow.setStartDate(showObject.optString("start_date", null));
+                    tvShow.setEndDate(showObject.optString("end_date", null));
                     tvShow.setCountry(showObject.optString("country", null));
                     tvShow.setNetwork(showObject.optString("network", null));
                     tvShow.setStatus(showObject.optString("status", null));

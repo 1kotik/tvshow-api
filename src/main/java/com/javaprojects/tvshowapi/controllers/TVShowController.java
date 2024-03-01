@@ -13,13 +13,13 @@ public class TVShowController {
 
     private TVShowService tvShowService;
 
-    public TVShowController(TVShowService tvShowService){
-        this.tvShowService=tvShowService;
+    public TVShowController(TVShowService tvShowService) {
+        this.tvShowService = tvShowService;
     }
 
     @GetMapping
-    public List<TVShow> searchByTitle(@RequestParam(required = false) String title) throws IOException{
-        if(title!=null) return tvShowService.searchByTitle(title);
+    public List<TVShow> searchByTitle(@RequestParam(required = false) String title) throws IOException {
+        if (title != null) return tvShowService.searchByTitle(title);
         else return tvShowService.searchByTitle("");
     }
 
