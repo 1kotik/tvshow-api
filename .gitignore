@@ -8,6 +8,7 @@ tvshow-api.iml
 /.mvn
 /lib
 /.github
+pom.xml
 
 
 HELP.md
