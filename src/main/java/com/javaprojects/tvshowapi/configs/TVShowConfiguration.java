@@ -19,4 +19,5 @@ public class TVShowConfiguration {
         return Logger.getLogger(getClass().getName());
     }
 
+    
 }
