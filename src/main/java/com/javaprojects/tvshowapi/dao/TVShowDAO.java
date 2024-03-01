@@ -48,7 +48,7 @@ public class TVShowDAO {
                 for (int i = 0; i < showsArray.length(); i++) {
                     JSONObject showObject = showsArray.getJSONObject(i);
                     TVShow tvShow = new TVShow();
-                    tvShow.setId(showObject.optInt("id", i + 1));                
+                    tvShow.setId(showObject.optInt("id", i + 1));
                     tvShow.setTitle(showObject.optString("name", null));
                     tvShow.setPermalink(showObject.optString("permalink", null));
                     tvShow.setStartDate(showObject.optString("start_date", null));
