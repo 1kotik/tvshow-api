@@ -11,7 +11,7 @@ import java.util.List;
 
 @Service
 public class TVShowService {
-    private TVShowDAO tvShowDAO;
+    private final TVShowDAO tvShowDAO;
 
     public TVShowService(TVShowDAO tvShowDAO) {
         this.tvShowDAO = tvShowDAO;
