@@ -11,7 +11,7 @@ import java.util.List;
 @RequestMapping("/tvshows")
 public class TVShowController {
 
-    private TVShowService tvShowService;
+    private final TVShowService tvShowService;
 
     public TVShowController(TVShowService tvShowService) {
         this.tvShowService = tvShowService;
