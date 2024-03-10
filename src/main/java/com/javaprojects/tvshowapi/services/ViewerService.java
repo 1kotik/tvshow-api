@@ -7,6 +7,7 @@ import com.javaprojects.tvshowapi.repositories.ViewerRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,7 +35,7 @@ public class ViewerService {
         if (viewerRepository.findById(viewer.getId()).isEmpty()) {
             viewerRepository.save(viewer);
             logger.log(Level.INFO, "Successfully added viewer " + viewer.getName());
-        } else logger.log(Level.INFO, "Viewer with such ID already exists!");
+        } else logger.log(Level.INFO, "Cannot insert. Viewer with such ID already exists!");
     }
 
     @Transactional
@@ -42,14 +43,14 @@ public class ViewerService {
         if (viewerRepository.findById(id).isPresent()) {
             viewerRepository.deleteById(id);
             logger.log(Level.INFO, "Delete is successful");
-        } else logger.log(Level.INFO, "Viewer with such ID does not exist!");
+        } else logger.log(Level.INFO, "Cannot delete. Viewer with such ID does not exist!");
     }
 
     public void updateViewer(Viewer viewer) {
         if (viewerRepository.findById(viewer.getId()).isPresent()) {
             viewerRepository.save(viewer);
             logger.log(Level.INFO, "Update is successful");
-        } else logger.log(Level.INFO, "Viewer with such ID does not exist!");
+        } else logger.log(Level.INFO, "Cannot update. Viewer with such ID does not exist!");
     }
 
     @Transactional
@@ -68,8 +69,8 @@ public class ViewerService {
             logger.log(Level.INFO, "Returned watched TV Shows");
             return viewer.get().getTvShows();
         } else {
-            logger.log(Level.INFO, "Viewer with such ID does not exist!");
-            return null;
+            logger.log(Level.INFO, "Cannot get. Viewer with such ID does not exist!");
+            return new HashSet<>();
         }
     }
 }

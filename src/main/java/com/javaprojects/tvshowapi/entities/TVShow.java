@@ -43,5 +43,4 @@ public class TVShow {
     @JsonIgnore
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "tvShows")
     private Set<Viewer> viewers = new HashSet<>();
-
 }
