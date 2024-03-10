@@ -5,7 +5,6 @@ import com.javaprojects.tvshowapi.repositories.ViewerRepository;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,7 +18,7 @@ public class ViewerService {
             logger.log(Level.INFO, "Return all viewers");
             return viewerRepository.findAll();
         } else {
-            logger.log(Level.INFO, "Success");
+            logger.log(Level.INFO, "Search is successful");
             return viewerRepository.searchByName(name);
         }
     }
@@ -34,14 +33,14 @@ public class ViewerService {
     public void deleteViewer(Long id) {
         if (viewerRepository.findById(id).isPresent()) {
             viewerRepository.deleteById(id);
-            logger.log(Level.INFO, "Success");
+            logger.log(Level.INFO, "Delete is successful");
         } else logger.log(Level.INFO, "Viewer with such ID does not exist!");
     }
 
     public void updateViewer(Viewer viewer) {
         if (viewerRepository.findById(viewer.getId()).isPresent()) {
             viewerRepository.save(viewer);
-            logger.log(Level.INFO, "Success");
+            logger.log(Level.INFO, "Update is successful");
         } else logger.log(Level.INFO, "Viewer with such ID does not exist!");
     }
 }

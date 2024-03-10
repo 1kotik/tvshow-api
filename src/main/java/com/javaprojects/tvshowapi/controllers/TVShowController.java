@@ -23,22 +23,22 @@ public class TVShowController {
     }
 
     @GetMapping("/get")
-    public List<TVShow> searchByTitle(@RequestParam(required = false) String title){
+    public List<TVShow> searchByTitle(@RequestParam(required = false) String title) {
         return tvShowService.searchByTitle(title);
     }
 
     @PostMapping("/post")
-    public void insertTVShow(@RequestBody TVShow tvShow){
+    public void insertTVShow(@RequestBody TVShow tvShow) {
         tvShowService.insertTVShow(tvShow);
     }
 
     @DeleteMapping("/delete")
-    public void deleteTVShow(@RequestParam Long id){
+    public void deleteTVShow(@RequestParam Long id) {
         tvShowService.deleteTVShow(id);
     }
 
     @PutMapping("/update")
-    public void updateTVShow(@RequestBody TVShow tvShow){
+    public void updateTVShow(@RequestBody TVShow tvShow) {
         tvShowService.updateTVShow(tvShow);
     }
 }

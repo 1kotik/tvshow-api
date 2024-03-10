@@ -24,7 +24,7 @@ public class TVShowService {
 
     public TVShowService(Logger logger, TVShowRepository tvShowRepository) {
         this.logger = logger;
-        this.tvShowRepository=tvShowRepository;
+        this.tvShowRepository = tvShowRepository;
     }
 
 
@@ -66,38 +66,38 @@ public class TVShowService {
         } catch (IOException | JSONException e) {
             logger.log(Level.INFO, e.getMessage());
         }
-        logger.log(Level.INFO, "Success");
+        logger.log(Level.INFO, "Search from API is successful");
         return results;
     }
 
-    public List<TVShow> searchByTitle(String title){
+    public List<TVShow> searchByTitle(String title) {
         if (title == null || title.equals("")) {
             logger.log(Level.INFO, "Return all viewers");
             return tvShowRepository.findAll();
         } else {
-            logger.log(Level.INFO, "Success");
+            logger.log(Level.INFO, "Search is successful");
             return tvShowRepository.searchByTitle(title);
         }
     }
 
-    public void insertTVShow(TVShow tvShow){
+    public void insertTVShow(TVShow tvShow) {
         if (tvShowRepository.findById(tvShow.getId()).isEmpty()) {
             tvShowRepository.save(tvShow);
             logger.log(Level.INFO, "Successfully added TV Show " + tvShow.getTitle());
         } else logger.log(Level.INFO, "TV Show with such ID already exists!");
     }
 
-    public void deleteTVShow(Long id){
+    public void deleteTVShow(Long id) {
         if (tvShowRepository.findById(id).isPresent()) {
             tvShowRepository.deleteById(id);
-            logger.log(Level.INFO, "Success");
+            logger.log(Level.INFO, "Delete is successful");
         } else logger.log(Level.INFO, "TV Show with such ID does not exist!");
     }
 
-    public void updateTVShow(TVShow tvShow){
+    public void updateTVShow(TVShow tvShow) {
         if (tvShowRepository.findById(tvShow.getId()).isPresent()) {
             tvShowRepository.save(tvShow);
-            logger.log(Level.INFO, "Success");
+            logger.log(Level.INFO, "Update is successful");
         } else logger.log(Level.INFO, "TV Show with such ID does not exist!");
     }
 
@@ -105,7 +105,7 @@ public class TVShowService {
     public void fillDB() {
         String baseURL = "https://www.episodate.com/api/most-popular?page=";
         List<TVShow> tvShows = new ArrayList<>();
-        Long id= 1L;
+        Long id = 1L;
         for (int page = 1; page < 1250; page++) {
             String paramURL = String.format("%s%d", baseURL, page);
 
