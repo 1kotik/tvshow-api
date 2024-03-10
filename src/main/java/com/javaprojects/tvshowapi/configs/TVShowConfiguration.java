@@ -18,8 +18,8 @@ public class TVShowConfiguration {
     }
 
     @Bean
-    public ViewerService viewerService(ViewerRepository viewerRepository) {
-        return new ViewerService(logger(), viewerRepository);
+    public ViewerService viewerService(ViewerRepository viewerRepository, TVShowRepository tvShowRepository) {
+        return new ViewerService(logger(), viewerRepository, tvShowRepository);
     }
 
     @Bean

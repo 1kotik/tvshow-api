@@ -35,7 +35,7 @@ Clone the repository:
 #### In command line:
 - GET from external API
 ```
-curl -X GET "http://localhost:8080/tvshows/get_from_api?title={your-title}"
+curl -X GET "http://localhost:8080/tvshows/get-from-api?title={your-title}"
 ```
 - GET from database
 ```

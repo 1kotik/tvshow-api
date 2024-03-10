@@ -2,6 +2,7 @@ package com.javaprojects.tvshowapi.services;
 
 import com.javaprojects.tvshowapi.entities.TVShow;
 import com.javaprojects.tvshowapi.repositories.TVShowRepository;
+import jakarta.transaction.Transactional;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -86,7 +87,7 @@ public class TVShowService {
             logger.log(Level.INFO, "Successfully added TV Show " + tvShow.getTitle());
         } else logger.log(Level.INFO, "TV Show with such ID already exists!");
     }
-
+    @Transactional
     public void deleteTVShow(Long id) {
         if (tvShowRepository.findById(id).isPresent()) {
             tvShowRepository.deleteById(id);

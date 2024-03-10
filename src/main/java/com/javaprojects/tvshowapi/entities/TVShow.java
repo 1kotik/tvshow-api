@@ -41,10 +41,7 @@ public class TVShow {
     private String imageThumbnailPath;
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "tvshow_viewer",
-            joinColumns = @JoinColumn(name = "tvshow_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "viewer_id", referencedColumnName = "id"))
+    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "tvShows")
     private Set<Viewer> viewers = new HashSet<>();
 
 }

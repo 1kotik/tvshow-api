@@ -26,7 +26,7 @@ public class Viewer {
     private String country;
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "tvshow_viewer",
             joinColumns = @JoinColumn(name = "viewer_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tvshow_id", referencedColumnName = "id"))

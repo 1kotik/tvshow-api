@@ -17,7 +17,7 @@ public class TVShowController {
         this.tvShowService = tvShowService;
     }
 
-    @GetMapping("/get_from_api")
+    @GetMapping("/get-from-api")
     public List<TVShow> searchByTitleFromAPI(@RequestParam(required = false) String title) throws IOException {
         return tvShowService.searchByTitleFromAPI(title);
     }
