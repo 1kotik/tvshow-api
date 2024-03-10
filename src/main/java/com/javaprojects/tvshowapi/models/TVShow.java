@@ -1,10 +1,16 @@
-package com.javaprojects.tvshowapi.entity;
+package com.javaprojects.tvshowapi.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class TVShow {
     private int id;
     private String title;
@@ -15,4 +21,5 @@ public class TVShow {
     private String network;
     private String status;
     private String imageThumbnailPath;
+    private List<Integer> viewersId;
 }

@@ -8,6 +8,7 @@ tvshow-api.iml
 /.mvn
 /lib
 /.github
+/src/main/java/com/javaprojects/tvshowapi/models
 
 
 HELP.md

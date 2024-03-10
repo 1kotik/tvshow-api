@@ -19,6 +19,8 @@ Note: Application can return list of TV Shows with entered title. Also you can p
 - Spring Boot
 - Lombok
 - Maven
+- JPA Hibernate
+- PostgreSQL
 
 ## Installation
 
@@ -30,18 +32,36 @@ Clone the repository:
 
 ## Usage
 ### Type Request
-In command line:
+#### In command line:
+- GET from external API
 ```
-curl -X GET "http://localhost:8080/tvshows?title={your-title}"
+curl -X GET "http://localhost:8080/tvshows/get_from_api?title={your-title}"
+```
+- GET from database
+```
+curl -X GET "http://localhost:8080/tvshows/get?title={your-title}"
+```
+- POST
+```
+curl -X POST "http://localhost:8080/tvshows/post {body}"
+```
+- DELETE
+```
+curl -X DELETE "http://localhost:8080/tvshows/delete?id={id}"
+```
+- PUT 
+```
+curl -X PUT "http://localhost:8080/tvshows/update {body}"
 ```
 
-In browser (or platforms for using APIs (Postman)):
+You can get do such requests with viewers using 
 ```
-http://localhost:8080/tvshows?title={your-title}
+http://localhost:8080/viewers"
 ```
+
 
 ## JSON Example
-
+### TV Show:
 ```json
 [
     {
@@ -55,6 +75,18 @@ http://localhost:8080/tvshows?title={your-title}
         "status": "Running",
         "imageThumbnailPath": "https://static.episodate.com/images/tv-show/thumbnail/20177.jpg"
     }
+]
+```
+
+### Viewer:
+```json
+[
+  {
+    "id": 22,
+    "age": 22,
+    "name": "Amy",
+    "country": "US"
+  }
 ]
 ```
 
