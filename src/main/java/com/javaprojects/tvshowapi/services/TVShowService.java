@@ -1,8 +1,13 @@
 package com.javaprojects.tvshowapi.services;
 
+import com.javaprojects.tvshowapi.entities.Character;
 import com.javaprojects.tvshowapi.entities.TVShow;
+import com.javaprojects.tvshowapi.entities.Viewer;
+import com.javaprojects.tvshowapi.repositories.CharacterRepository;
 import com.javaprojects.tvshowapi.repositories.TVShowRepository;
+import com.javaprojects.tvshowapi.repositories.ViewerRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -13,20 +18,16 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+@AllArgsConstructor
 public class TVShowService {
     private static final String API_URL = "https://www.episodate.com/api/search";
     private final Logger logger;
     private final TVShowRepository tvShowRepository;
-
-    public TVShowService(Logger logger, TVShowRepository tvShowRepository) {
-        this.logger = logger;
-        this.tvShowRepository = tvShowRepository;
-    }
+    private final CharacterRepository characterRepository;
 
 
     public List<TVShow> searchByTitleFromAPI(String title) throws IOException {
@@ -67,6 +68,7 @@ public class TVShowService {
         } catch (IOException | JSONException e) {
             logger.log(Level.INFO, e.getMessage());
         }
+        tvShowRepository.saveAll(results);
         logger.log(Level.INFO, "Search from API is successful");
         return results;
     }
@@ -87,9 +89,15 @@ public class TVShowService {
             logger.log(Level.INFO, "Successfully added TV Show " + tvShow.getTitle());
         } else logger.log(Level.INFO, "TV Show with such ID already exists!");
     }
+
     @Transactional
     public void deleteTVShow(Long id) {
-        if (tvShowRepository.findById(id).isPresent()) {
+        Optional<TVShow> tvShow = tvShowRepository.findById(id);
+        if (tvShow.isPresent()) {
+            for (Viewer viewer : tvShow.get().getViewers()) {
+                viewer.getTvShows().remove(tvShow.get());
+            }
+            characterRepository.deleteAll(tvShow.get().getCharacters());
             tvShowRepository.deleteById(id);
             logger.log(Level.INFO, "Delete is successful");
         } else logger.log(Level.INFO, "TV Show with such ID does not exist!");
@@ -100,6 +108,17 @@ public class TVShowService {
             tvShowRepository.save(tvShow);
             logger.log(Level.INFO, "Update is successful");
         } else logger.log(Level.INFO, "TV Show with such ID does not exist!");
+    }
+
+    public Set<Character> getCharacters(Long tvShowId) {
+        Optional<TVShow> tvShow = tvShowRepository.findById(tvShowId);
+        if (tvShow.isPresent()) {
+            logger.log(Level.INFO, "Returned characters");
+            return tvShow.get().getCharacters();
+        } else {
+            logger.log(Level.INFO, "Cannot get. TV Show with such ID does not exist!");
+            return new HashSet<>();
+        }
     }
 
 

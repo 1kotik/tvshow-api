@@ -41,6 +41,10 @@ public class TVShow {
     private String imageThumbnailPath;
 
     @JsonIgnore
-    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "tvShows")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "tvShows")
     private Set<Viewer> viewers = new HashSet<>();
+
+    @JsonIgnore
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "tvShow")
+    Set<Character> characters = new HashSet<>();
 }

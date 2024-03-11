@@ -26,7 +26,7 @@ public class Viewer {
     private String country;
 
     @JsonIgnore
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
     @JoinTable(name = "tvshow_viewer",
             joinColumns = @JoinColumn(name = "viewer_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tvshow_id", referencedColumnName = "id"))

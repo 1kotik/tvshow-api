@@ -1,11 +1,13 @@
 package com.javaprojects.tvshowapi.controllers;
 
+import com.javaprojects.tvshowapi.entities.Character;
 import com.javaprojects.tvshowapi.entities.TVShow;
 import com.javaprojects.tvshowapi.services.TVShowService;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/tvshows")
@@ -25,6 +27,11 @@ public class TVShowController {
     @GetMapping("/get")
     public List<TVShow> searchByTitle(@RequestParam(required = false) String title) {
         return tvShowService.searchByTitle(title);
+    }
+
+    @GetMapping("/get-characters")
+    public Set<Character> getCharacters(@RequestParam Long tv_id){
+        return tvShowService.getCharacters(tv_id);
     }
 
     @PostMapping("/post")

@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 public class ViewerService {
     private final Logger logger;
     private final ViewerRepository viewerRepository;
-
     private final TVShowRepository tvShowRepository;
 
     public List<Viewer> searchByName(String name) {
@@ -38,7 +37,6 @@ public class ViewerService {
         } else logger.log(Level.INFO, "Cannot insert. Viewer with such ID already exists!");
     }
 
-    @Transactional
     public void deleteViewer(Long id) {
         if (viewerRepository.findById(id).isPresent()) {
             viewerRepository.deleteById(id);
