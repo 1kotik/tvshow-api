@@ -19,8 +19,8 @@ public class CharacterController {
     }
 
     @PostMapping("/post")
-    public void insertCharacter(@RequestParam Long tv_id, @RequestBody Character character) {
-        characterService.insertCharacter(tv_id, character);
+    public void insertCharacter(@RequestParam Long id, @RequestBody Character character) {
+        characterService.insertCharacter(id, character);
     }
 
     @DeleteMapping("/delete")

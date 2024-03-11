@@ -30,8 +30,8 @@ public class TVShowController {
     }
 
     @GetMapping("/get-characters")
-    public Set<Character> getCharacters(@RequestParam Long tv_id){
-        return tvShowService.getCharacters(tv_id);
+    public Set<Character> getCharacters(@RequestParam Long id){
+        return tvShowService.getCharacters(id);
     }
 
     @PostMapping("/post")
