@@ -62,7 +62,7 @@ public class ViewerService {
     }
 
     public Set<TVShow> getWatchedTVShows(Long viewerId) {
-        Optional<Viewer> viewer=viewerRepository.findById(viewerId);
+        Optional<Viewer> viewer = viewerRepository.findById(viewerId);
         if (viewer.isPresent()) {
             logger.log(Level.INFO, "Returned watched TV Shows");
             return viewer.get().getTvShows();

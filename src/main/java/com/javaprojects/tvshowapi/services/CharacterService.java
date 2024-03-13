@@ -3,7 +3,6 @@ package com.javaprojects.tvshowapi.services;
 import com.javaprojects.tvshowapi.entities.Character;
 import com.javaprojects.tvshowapi.repositories.CharacterRepository;
 import com.javaprojects.tvshowapi.repositories.TVShowRepository;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
@@ -27,7 +26,6 @@ public class CharacterService {
         }
     }
 
-    @Transactional
     public void insertCharacter(Long tvShowId, Character character) {
         if (characterRepository.findById(character.getId()).isEmpty() && tvShowRepository.findById(tvShowId).isPresent()) {
             character.setTvShow(tvShowRepository.findById(tvShowId).get());

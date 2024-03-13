@@ -1,6 +1,6 @@
 package com.javaprojects.tvshowapi.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,10 +25,11 @@ public class Viewer {
     @Column(name = "country")
     private String country;
 
-    @JsonIgnore
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "tvshow_viewer",
             joinColumns = @JoinColumn(name = "viewer_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tvshow_id", referencedColumnName = "id"))
     private Set<TVShow> tvShows = new HashSet<>();
+
 }

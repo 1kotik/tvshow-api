@@ -21,9 +21,10 @@ public class ViewerController {
     }
 
     @GetMapping("/get-watched")
-    public Set<TVShow> getWatchedTVShows(@RequestParam Long id){
+    public Set<TVShow> getWatchedTVShows(@RequestParam Long id) {
         return viewerService.getWatchedTVShows(id);
     }
+
     @PostMapping("/post")
     public void insertViewer(@RequestBody Viewer viewer) {
         viewerService.insertViewer(viewer);
@@ -40,7 +41,7 @@ public class ViewerController {
     }
 
     @PutMapping("/add-to-watched")
-    public void addToWatched(@RequestParam Long vid, @RequestParam Long tv){
+    public void addToWatched(@RequestParam Long vid, @RequestParam Long tv) {
         viewerService.addToWatched(vid, tv);
     }
 }

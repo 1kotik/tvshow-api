@@ -5,7 +5,6 @@ import com.javaprojects.tvshowapi.entities.TVShow;
 import com.javaprojects.tvshowapi.entities.Viewer;
 import com.javaprojects.tvshowapi.repositories.CharacterRepository;
 import com.javaprojects.tvshowapi.repositories.TVShowRepository;
-import com.javaprojects.tvshowapi.repositories.ViewerRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import okhttp3.OkHttpClient;
@@ -85,6 +84,8 @@ public class TVShowService {
 
     public void insertTVShow(TVShow tvShow) {
         if (tvShowRepository.findById(tvShow.getId()).isEmpty()) {
+            for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
+            for (Viewer viewer : tvShow.getViewers()) viewer.getTvShows().add(tvShow);
             tvShowRepository.save(tvShow);
             logger.log(Level.INFO, "Successfully added TV Show " + tvShow.getTitle());
         } else logger.log(Level.INFO, "TV Show with such ID already exists!");

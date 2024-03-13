@@ -19,7 +19,7 @@ public class Character {
     @Column(name = "feature")
     private String feature;
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinColumn(name = "tvshow_id")
     TVShow tvShow;
 }
