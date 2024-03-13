@@ -27,7 +27,7 @@ public class CharacterService {
     }
 
     public void insertCharacter(Long tvShowId, Character character) {
-        if (characterRepository.findById(character.getId()).isEmpty() && tvShowRepository.findById(tvShowId).isPresent()) {
+        if (tvShowRepository.findById(tvShowId).isPresent()) {
             character.setTvShow(tvShowRepository.findById(tvShowId).get());
             characterRepository.save(character);
             logger.log(Level.INFO, "Successfully added character " + character.getName());
@@ -48,4 +48,10 @@ public class CharacterService {
             logger.log(Level.INFO, "Update is successful");
         } else logger.log(Level.INFO, "Cannot update. Character with such ID does not exist!");
     }
+
+    public Character saveCharacter(Character character) {
+        return characterRepository.save(character);
+    }
 }
+
+

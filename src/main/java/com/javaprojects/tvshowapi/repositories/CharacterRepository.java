@@ -11,4 +11,5 @@ import java.util.List;
 public interface CharacterRepository extends JpaRepository<Character, Long> {
     @Query("SELECT character FROM Character character WHERE character.name = ?1")
     List<Character> searchByName(String name);
+
 }

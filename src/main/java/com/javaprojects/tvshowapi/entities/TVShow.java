@@ -14,6 +14,7 @@ import java.util.Set;
 @Table(name = "tvshow")
 public class TVShow {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "title")

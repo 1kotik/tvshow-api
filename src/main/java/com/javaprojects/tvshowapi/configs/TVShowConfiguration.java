@@ -15,8 +15,8 @@ import java.util.logging.Logger;
 @Configuration
 public class TVShowConfiguration {
     @Bean
-    public TVShowService tvShowService(TVShowRepository tvShowRepository, CharacterRepository characterRepository) {
-        return new TVShowService(logger(), tvShowRepository, characterRepository);
+    public TVShowService tvShowService(TVShowRepository tvShowRepository, CharacterRepository characterRepository, ViewerRepository viewerRepository) {
+        return new TVShowService(logger(), tvShowRepository, characterRepository, viewerRepository);
     }
 
     @Bean

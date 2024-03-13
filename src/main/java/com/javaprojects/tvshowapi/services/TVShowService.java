@@ -5,6 +5,7 @@ import com.javaprojects.tvshowapi.entities.TVShow;
 import com.javaprojects.tvshowapi.entities.Viewer;
 import com.javaprojects.tvshowapi.repositories.CharacterRepository;
 import com.javaprojects.tvshowapi.repositories.TVShowRepository;
+import com.javaprojects.tvshowapi.repositories.ViewerRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import okhttp3.OkHttpClient;
@@ -27,6 +28,7 @@ public class TVShowService {
     private final Logger logger;
     private final TVShowRepository tvShowRepository;
     private final CharacterRepository characterRepository;
+    private final ViewerRepository viewerRepository;
 
 
     public List<TVShow> searchByTitleFromAPI(String title) throws IOException {
@@ -83,12 +85,10 @@ public class TVShowService {
     }
 
     public void insertTVShow(TVShow tvShow) {
-        if (tvShowRepository.findById(tvShow.getId()).isEmpty()) {
-            for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
-            for (Viewer viewer : tvShow.getViewers()) viewer.getTvShows().add(tvShow);
-            tvShowRepository.save(tvShow);
-            logger.log(Level.INFO, "Successfully added TV Show " + tvShow.getTitle());
-        } else logger.log(Level.INFO, "TV Show with such ID already exists!");
+        for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
+        for (Viewer viewer : tvShow.getViewers()) viewer.getTvShows().add(tvShow);
+        tvShowRepository.save(tvShow);
+        logger.log(Level.INFO, "Successfully added TV Show " + tvShow.getTitle());
     }
 
     @Transactional
@@ -120,6 +120,9 @@ public class TVShowService {
             logger.log(Level.INFO, "Cannot get. TV Show with such ID does not exist!");
             return new HashSet<>();
         }
+    }
+    public TVShow saveTVShow(TVShow tvShow) {
+        return tvShowRepository.save(tvShow);
     }
 
 

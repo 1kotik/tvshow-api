@@ -1,5 +1,6 @@
 package com.javaprojects.tvshowapi.services;
 
+import com.javaprojects.tvshowapi.entities.Character;
 import com.javaprojects.tvshowapi.entities.TVShow;
 import com.javaprojects.tvshowapi.entities.Viewer;
 import com.javaprojects.tvshowapi.repositories.TVShowRepository;
@@ -31,10 +32,8 @@ public class ViewerService {
     }
 
     public void insertViewer(Viewer viewer) {
-        if (viewerRepository.findById(viewer.getId()).isEmpty()) {
             viewerRepository.save(viewer);
             logger.log(Level.INFO, "Successfully added viewer " + viewer.getName());
-        } else logger.log(Level.INFO, "Cannot insert. Viewer with such ID already exists!");
     }
 
     public void deleteViewer(Long id) {
@@ -70,6 +69,10 @@ public class ViewerService {
             logger.log(Level.INFO, "Cannot get. Viewer with such ID does not exist!");
             return new HashSet<>();
         }
+    }
+
+    public Viewer saveViewer(Viewer viewer) {
+        return viewerRepository.save(viewer);
     }
 }
 
