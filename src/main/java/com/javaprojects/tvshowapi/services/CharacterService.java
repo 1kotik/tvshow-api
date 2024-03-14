@@ -48,10 +48,7 @@ public class CharacterService {
             logger.log(Level.INFO, "Update is successful");
         } else logger.log(Level.INFO, "Cannot update. Character with such ID does not exist!");
     }
-
-    public Character saveCharacter(Character character) {
-        return characterRepository.save(character);
-    }
+    
 }
 
 

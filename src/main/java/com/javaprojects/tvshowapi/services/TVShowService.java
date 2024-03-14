@@ -121,9 +121,6 @@ public class TVShowService {
             return new HashSet<>();
         }
     }
-    public TVShow saveTVShow(TVShow tvShow) {
-        return tvShowRepository.save(tvShow);
-    }
 
 
     public void fillDB() {

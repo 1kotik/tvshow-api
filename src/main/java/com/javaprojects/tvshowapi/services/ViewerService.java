@@ -71,8 +71,6 @@ public class ViewerService {
         }
     }
 
-    public Viewer saveViewer(Viewer viewer) {
-        return viewerRepository.save(viewer);
-    }
+
 }
 
