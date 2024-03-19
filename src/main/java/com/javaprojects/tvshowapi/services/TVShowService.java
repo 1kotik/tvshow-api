@@ -6,7 +6,6 @@ import com.javaprojects.tvshowapi.entities.TVShow;
 import com.javaprojects.tvshowapi.entities.Viewer;
 import com.javaprojects.tvshowapi.repositories.CharacterRepository;
 import com.javaprojects.tvshowapi.repositories.TVShowRepository;
-import com.javaprojects.tvshowapi.repositories.ViewerRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import okhttp3.OkHttpClient;
