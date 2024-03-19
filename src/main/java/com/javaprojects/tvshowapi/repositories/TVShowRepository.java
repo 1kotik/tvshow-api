@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface TVShowRepository extends JpaRepository<TVShow, Long> {
-    @Query("SELECT tvShow FROM TVShow tvShow WHERE tvShow.title = ?1")
+    @Query("SELECT tvShow FROM TVShow tvShow WHERE tvShow.title =:title")
     List<TVShow> searchByTitle(String title);
 }

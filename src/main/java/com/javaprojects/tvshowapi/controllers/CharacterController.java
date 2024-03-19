@@ -18,6 +18,11 @@ public class CharacterController {
         return characterService.searchByName(name);
     }
 
+    @GetMapping("/get-by-title")
+    public List<Character> searchByTVShowTitle(@RequestParam(required = false) String title) {
+        return characterService.searchByTVShowTitle(title);
+    }
+
     @PostMapping("/post")
     public void insertCharacter(@RequestParam Long id, @RequestBody Character character) {
         characterService.insertCharacter(id, character);

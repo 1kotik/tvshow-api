@@ -1,11 +1,15 @@
 package com.javaprojects.tvshowapi.services;
 
+import com.javaprojects.tvshowapi.cache.EntityCache;
 import com.javaprojects.tvshowapi.entities.Character;
 import com.javaprojects.tvshowapi.repositories.CharacterRepository;
 import com.javaprojects.tvshowapi.repositories.TVShowRepository;
 import lombok.AllArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,13 +20,24 @@ public class CharacterService {
     private final CharacterRepository characterRepository;
     private final TVShowRepository tvShowRepository;
 
+    private EntityCache<Integer, List<Character>> cache;
+
     public List<Character> searchByName(String name) {
         if (name == null || name.equals("")) {
             logger.log(Level.INFO, "Return all characters");
             return characterRepository.findAll();
         } else {
-            logger.log(Level.INFO, "Search is successful");
-            return characterRepository.searchByName(name);
+            int hashCode = Objects.hashCode(name);
+            List<Character> characters = cache.get(hashCode);
+            if (characters != null) {
+                logger.log(Level.INFO, "Search in cache");
+                return characters;
+            } else {
+                List<Character> result = new ArrayList<>(characterRepository.searchByName(name));
+                logger.log(Level.INFO, "Search in database");
+                cache.put(hashCode, result);
+                return result;
+            }
         }
     }
 
@@ -35,7 +50,9 @@ public class CharacterService {
     }
 
     public void deleteCharacter(Long id) {
-        if (characterRepository.findById(id).isPresent()) {
+        Optional<Character> character = characterRepository.findById(id);
+        if (character.isPresent()) {
+            cache.remove(Objects.hashCode(character.get().getName()));
             characterRepository.deleteById(id);
             logger.log(Level.INFO, "Delete is successful");
         } else logger.log(Level.INFO, "Cannot delete. Character with such ID does not exist!");
@@ -49,6 +66,17 @@ public class CharacterService {
         } else logger.log(Level.INFO, "Cannot update. Character with such ID does not exist!");
     }
 
+    public List<Character> searchByTVShowTitle(String title) {
+        if (title == null || title.equals("")) {
+            logger.log(Level.INFO, "No title provided");
+            return new ArrayList<>();
+        } else {
+            logger.log(Level.INFO, "Searching");
+            List<Character> characters = characterRepository.searchByTVShowTitle(title);
+            if (!characters.isEmpty()) cache.put(Objects.hashCode(characters.get(0).getName()), characters);
+            return characters;
+        }
+    }
 }
 
 

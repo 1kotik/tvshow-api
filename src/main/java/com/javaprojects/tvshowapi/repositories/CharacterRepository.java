@@ -9,7 +9,9 @@ import java.util.List;
 
 @Repository
 public interface CharacterRepository extends JpaRepository<Character, Long> {
-    @Query("SELECT character FROM Character character WHERE character.name = ?1")
+    @Query("SELECT character FROM Character character WHERE character.name =:name")
     List<Character> searchByName(String name);
 
+    @Query("SELECT character FROM Character character WHERE character.tvShow.title =:title")
+    List<Character> searchByTVShowTitle(String title);
 }

@@ -9,6 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ViewerRepository extends JpaRepository<Viewer, Long> {
-    @Query("SELECT viewer FROM Viewer viewer WHERE viewer.name = ?1")
+    @Query("SELECT viewer FROM Viewer viewer WHERE viewer.name =:name")
     List<Viewer> searchByName(String name);
 }

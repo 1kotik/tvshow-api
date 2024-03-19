@@ -1,5 +1,6 @@
 package com.javaprojects.tvshowapi.services;
 
+import com.javaprojects.tvshowapi.cache.EntityCache;
 import com.javaprojects.tvshowapi.entities.Character;
 import com.javaprojects.tvshowapi.entities.TVShow;
 import com.javaprojects.tvshowapi.entities.Viewer;
@@ -28,7 +29,7 @@ public class TVShowService {
     private final Logger logger;
     private final TVShowRepository tvShowRepository;
     private final CharacterRepository characterRepository;
-    private final ViewerRepository viewerRepository;
+    private EntityCache<Integer, List<TVShow>> cache;
 
 
     public List<TVShow> searchByTitleFromAPI(String title) throws IOException {
@@ -76,11 +77,20 @@ public class TVShowService {
 
     public List<TVShow> searchByTitle(String title) {
         if (title == null || title.equals("")) {
-            logger.log(Level.INFO, "Return all viewers");
+            logger.log(Level.INFO, "Return all TV Shows");
             return tvShowRepository.findAll();
         } else {
-            logger.log(Level.INFO, "Search is successful");
-            return tvShowRepository.searchByTitle(title);
+            int hashCode = Objects.hashCode(title);
+            List<TVShow> tvShows = cache.get(hashCode);
+            if (tvShows != null) {
+                logger.log(Level.INFO, "Search in cache");
+                return tvShows;
+            } else {
+                List<TVShow> result = new ArrayList<>(tvShowRepository.searchByTitle(title));
+                logger.log(Level.INFO, "Search in database");
+                cache.put(hashCode, result);
+                return result;
+            }
         }
     }
 
@@ -99,6 +109,7 @@ public class TVShowService {
                 viewer.getTvShows().remove(tvShow.get());
             }
             characterRepository.deleteAll(tvShow.get().getCharacters());
+            cache.remove(Objects.hashCode(tvShow.get().getTitle()));
             tvShowRepository.deleteById(id);
             logger.log(Level.INFO, "Delete is successful");
         } else logger.log(Level.INFO, "TV Show with such ID does not exist!");
