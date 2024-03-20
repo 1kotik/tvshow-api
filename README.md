@@ -90,5 +90,16 @@ http://localhost:8080/viewers"
 ]
 ```
 
+### Character:
+```json
+[
+  {
+    "id": 19,
+    "name": "Sam",
+    "feature": "Winchester"
+  }
+]
+```
+
 
 
