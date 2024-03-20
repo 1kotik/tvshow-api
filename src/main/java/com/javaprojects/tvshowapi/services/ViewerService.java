@@ -40,6 +40,7 @@ public class ViewerService {
 
     public void insertViewer(Viewer viewer) {
         viewerRepository.save(viewer);
+        cache.remove(Objects.hashCode(viewer.getName()));
         logger.log(Level.INFO, "Successfully added viewer " + viewer.getName());
     }
 
@@ -54,6 +55,8 @@ public class ViewerService {
 
     public void updateViewer(Viewer viewer) {
         if (viewerRepository.findById(viewer.getId()).isPresent()) {
+            cache.remove(Objects.hashCode(viewer.getName()));
+            cache.remove(Objects.hashCode(viewerRepository.findById(viewer.getId()).get().getName()));
             viewerRepository.save(viewer);
             logger.log(Level.INFO, "Update is successful");
         } else logger.log(Level.INFO, "Cannot update. Viewer with such ID does not exist!");

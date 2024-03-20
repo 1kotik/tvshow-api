@@ -45,6 +45,7 @@ public class CharacterService {
         if (tvShowRepository.findById(tvShowId).isPresent()) {
             character.setTvShow(tvShowRepository.findById(tvShowId).get());
             characterRepository.save(character);
+            cache.remove(Objects.hashCode(character.getName()));
             logger.log(Level.INFO, "Successfully added character " + character.getName());
         } else logger.log(Level.INFO, "Cannot insert. Character with such ID already exists!");
     }
@@ -61,6 +62,8 @@ public class CharacterService {
     public void updateCharacter(Character character) {
         if (characterRepository.findById(character.getId()).isPresent()) {
             character.setTvShow(characterRepository.findById(character.getId()).get().getTvShow());
+            cache.remove(Objects.hashCode(character.getName()));
+            cache.remove(Objects.hashCode(characterRepository.findById(character.getId()).get().getName()));
             characterRepository.save(character);
             logger.log(Level.INFO, "Update is successful");
         } else logger.log(Level.INFO, "Cannot update. Character with such ID does not exist!");
@@ -72,9 +75,7 @@ public class CharacterService {
             return new ArrayList<>();
         } else {
             logger.log(Level.INFO, "Searching");
-            List<Character> characters = characterRepository.searchByTVShowTitle(title);
-            if (!characters.isEmpty()) cache.put(Objects.hashCode(characters.get(0).getName()), characters);
-            return characters;
+            return characterRepository.searchByTVShowTitle(title);
         }
     }
 }

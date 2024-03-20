@@ -97,6 +97,7 @@ public class TVShowService {
         for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
         for (Viewer viewer : tvShow.getViewers()) viewer.getTvShows().add(tvShow);
         tvShowRepository.save(tvShow);
+        cache.remove(Objects.hashCode(tvShow.getTitle()));
         logger.log(Level.INFO, "Successfully added TV Show " + tvShow.getTitle());
     }
 
@@ -116,6 +117,8 @@ public class TVShowService {
 
     public void updateTVShow(TVShow tvShow) {
         if (tvShowRepository.findById(tvShow.getId()).isPresent()) {
+            cache.remove(Objects.hashCode(tvShow.getTitle()));
+            cache.remove(Objects.hashCode(tvShowRepository.findById(tvShow.getId()).get().getTitle()));
             tvShowRepository.save(tvShow);
             logger.log(Level.INFO, "Update is successful");
         } else logger.log(Level.INFO, "TV Show with such ID does not exist!");
