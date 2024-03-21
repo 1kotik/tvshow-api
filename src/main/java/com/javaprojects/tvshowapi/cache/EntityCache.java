@@ -2,12 +2,12 @@ package com.javaprojects.tvshowapi.cache;
 
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class EntityCache<K, V> {
-    Map<K, V> cache = new ConcurrentHashMap<>();
+    Map<K, V> cache = new HashMap<>();
 
     private static final int CAPACITY = 200;
 
