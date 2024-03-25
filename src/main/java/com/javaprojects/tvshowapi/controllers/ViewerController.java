@@ -14,7 +14,10 @@ import java.util.Set;
 @AllArgsConstructor
 public class ViewerController {
     private final ViewerService viewerService;
-
+    @GetMapping("/get-all")
+    public List<Viewer> getViewers(){
+        return viewerService.getViewers();
+    }
     @GetMapping("/get")
     public List<Viewer> searchByName(@RequestParam(required = false) String name) {
         return viewerService.searchByName(name);

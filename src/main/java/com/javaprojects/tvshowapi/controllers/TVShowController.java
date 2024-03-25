@@ -23,29 +23,32 @@ public class TVShowController {
     public List<TVShow> searchByTitleFromAPI(@RequestParam(required = false) String title) throws IOException {
         return tvShowService.searchByTitleFromAPI(title);
     }
-
+    @GetMapping("/get-all")
+    public List<TVShow> getTVShows(){
+        return tvShowService.getTVShows();
+    }
     @GetMapping("/get")
     public List<TVShow> searchByTitle(@RequestParam(required = false) String title) {
         return tvShowService.searchByTitle(title);
     }
 
     @GetMapping("/get-characters")
-    public Set<Character> getCharacters(@RequestParam Long id) {
+    public Set<Character> getCharacters(@RequestParam(required = false) Long id) {
         return tvShowService.getCharacters(id);
     }
 
     @PostMapping("/post")
-    public void insertTVShow(@RequestBody TVShow tvShow) {
+    public void insertTVShow(@RequestBody(required = false) TVShow tvShow) {
         tvShowService.insertTVShow(tvShow);
     }
 
     @DeleteMapping("/delete")
-    public void deleteTVShow(@RequestParam Long id) {
+    public void deleteTVShow(@RequestParam(required = false) Long id) {
         tvShowService.deleteTVShow(id);
     }
 
     @PutMapping("/update")
-    public void updateTVShow(@RequestBody TVShow tvShow) {
+    public void updateTVShow(@RequestBody(required = false) TVShow tvShow) {
         tvShowService.updateTVShow(tvShow);
     }
 }
