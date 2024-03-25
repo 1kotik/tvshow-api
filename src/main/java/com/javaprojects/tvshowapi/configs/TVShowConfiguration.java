@@ -54,5 +54,4 @@ public class TVShowConfiguration {
         return new EntityCache<>();
     }
 
-
 }
