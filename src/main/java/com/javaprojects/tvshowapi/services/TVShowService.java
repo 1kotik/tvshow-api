@@ -23,8 +23,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 import static com.javaprojects.tvshowapi.utilities.Constants.*;
 
@@ -32,7 +31,6 @@ import static com.javaprojects.tvshowapi.utilities.Constants.*;
 @AllArgsConstructor
 public class TVShowService {
     private static final String API_URL = "https://www.episodate.com/api/search";
-    private final Logger logger;
     private final TVShowRepository tvShowRepository;
     private final CharacterRepository characterRepository;
     private EntityCache<Integer, List<TVShow>> cache;
@@ -74,18 +72,15 @@ public class TVShowService {
                 }
             }
         } catch (IOException | JSONException e) {
-            logger.log(Level.INFO, e.getMessage());
+            throw new ServerException(SERVER_ERROR_MSG);
         }
         if (results.isEmpty()) {
-            logger.log(Level.INFO, NOT_FOUND_MSG);
             throw new NotFoundException(NOT_FOUND_MSG);
         }
         try {
             tvShowRepository.saveAll(results);
-            logger.log(Level.INFO, "Search from API is successful");
             return results;
         } catch (Exception e) {
-            logger.log(Level.INFO, e.getMessage());
             throw new ServerException(SERVER_ERROR_MSG);
         }
     }
@@ -95,36 +90,29 @@ public class TVShowService {
             List<TVShow> result = tvShowRepository.findAll();
             if (!result.isEmpty()) return result;
         } catch (Exception e) {
-            logger.log(Level.INFO, e.getMessage());
             throw new ServerException(SERVER_ERROR_MSG);
         }
-        logger.log(Level.INFO, NOT_FOUND_MSG);
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
     public List<TVShow> searchByTitle(String title) {
         if (title == null || title.equals("")) {
-            logger.log(Level.INFO, INVALID_INFO_MSG);
             throw new BadRequestException(INVALID_INFO_MSG);
         } else {
             int hashCode = Objects.hashCode(title);
             List<TVShow> tvShows = cache.get(hashCode);
             if (tvShows != null) {
-                logger.log(Level.INFO, "Search in cache");
                 return tvShows;
             } else {
                 try {
                     List<TVShow> result = new ArrayList<>(tvShowRepository.searchByTitle(title));
                     if (!result.isEmpty()) {
-                        logger.log(Level.INFO, "Search in database");
                         cache.put(hashCode, result);
                         return result;
                     }
                 } catch (Exception e) {
-                    logger.log(Level.INFO, e.getMessage());
                     throw new ServerException(SERVER_ERROR_MSG);
                 }
-                logger.log(Level.INFO, NOT_FOUND_MSG);
                 throw new NotFoundException(NOT_FOUND_MSG);
             }
         }
@@ -132,7 +120,6 @@ public class TVShowService {
 
     public void insertTVShow(TVShow tvShow) {
         if (tvShow.getTitle() == null || tvShow.getTitle().equals("")) {
-            logger.log(Level.INFO, INVALID_INFO_MSG);
             throw new BadRequestException(INVALID_INFO_MSG);
         }
         for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
@@ -140,17 +127,14 @@ public class TVShowService {
         try {
             tvShowRepository.save(tvShow);
         } catch (Exception e) {
-            logger.log(Level.INFO, e.getMessage());
             throw new ServerException(SERVER_ERROR_MSG);
         }
         cache.remove(Objects.hashCode(tvShow.getTitle()));
-        logger.log(Level.INFO, "Successfully added TV Show " + tvShow.getTitle());
     }
 
     @Transactional
     public void deleteTVShow(Long id) {
         if (id == null) {
-            logger.log(Level.INFO, INVALID_INFO_MSG);
             throw new BadRequestException(INVALID_INFO_MSG);
         }
         try {
@@ -162,20 +146,16 @@ public class TVShowService {
                 characterRepository.deleteAll(tvShow.get().getCharacters());
                 cache.remove(Objects.hashCode(tvShow.get().getTitle()));
                 tvShowRepository.deleteById(id);
-                logger.log(Level.INFO, "Delete is successful");
                 return;
             }
         } catch (Exception e) {
-            logger.log(Level.INFO, e.getMessage());
             throw new ServerException(SERVER_ERROR_MSG);
         }
-        logger.log(Level.INFO, NOT_FOUND_MSG);
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
     public void updateTVShow(TVShow tvShow) {
         if (tvShow.getTitle() == null || tvShow.getTitle().equals("") || tvShow.getId() == null) {
-            logger.log(Level.INFO, INVALID_INFO_MSG);
             throw new BadRequestException(INVALID_INFO_MSG);
         }
         for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
@@ -185,80 +165,27 @@ public class TVShowService {
                 cache.remove(Objects.hashCode(tvShow.getTitle()));
                 cache.remove(Objects.hashCode(tvShowRepository.findById(tvShow.getId()).get().getTitle()));
                 tvShowRepository.save(tvShow);
-                logger.log(Level.INFO, "Update is successful");
                 return;
             }
         } catch (Exception e) {
-            logger.log(Level.INFO, e.getMessage());
             throw new ServerException(SERVER_ERROR_MSG);
         }
-        logger.log(Level.INFO, NOT_FOUND_MSG);
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
     public Set<Character> getCharacters(Long tvShowId) {
         if (tvShowId == null) {
-            logger.log(Level.INFO, INVALID_INFO_MSG);
             throw new BadRequestException(INVALID_INFO_MSG);
         }
         try {
             Optional<TVShow> tvShow = tvShowRepository.findById(tvShowId);
             if (tvShow.isPresent() && !tvShow.get().getCharacters().isEmpty()) {
-                logger.log(Level.INFO, "Returned characters");
                 return tvShow.get().getCharacters();
             }
         } catch (Exception e) {
-            logger.log(Level.INFO, e.getMessage());
             throw new ServerException(SERVER_ERROR_MSG);
         }
-        logger.log(Level.INFO, NOT_FOUND_MSG);
         throw new NotFoundException(NOT_FOUND_MSG);
     }
-
-
-    public void fillDB() {
-        String baseURL = "https://www.episodate.com/api/most-popular?page=";
-        List<TVShow> tvShows = new ArrayList<>();
-        Long id = 1L;
-        for (int page = 1; page < 1250; page++) {
-            String paramURL = String.format("%s%d", baseURL, page);
-
-            try {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url(paramURL).build();
-                Response response = client.newCall(request).execute();
-
-                // Проверка успешного выполнения запроса
-                if (response.isSuccessful()) {
-                    String jsonResponse = response.body().string();
-
-                    // Парсинг JSON ответа
-                    JSONObject jsonObject = new JSONObject(jsonResponse);
-                    JSONArray showsArray = jsonObject.getJSONArray("tv_shows");
-
-                    // Преобразование данных в объекты TVShow
-                    for (int i = 0; i < showsArray.length(); i++) {
-                        JSONObject showObject = showsArray.getJSONObject(i);
-                        TVShow tvShow = new TVShow();
-                        tvShow.setId(id);
-                        tvShow.setTitle(showObject.optString("name", null));
-                        tvShow.setPermalink(showObject.optString("permalink", null));
-                        tvShow.setStartDate(showObject.optString("start_date", null));
-                        tvShow.setEndDate(showObject.optString("end_date", null));
-                        tvShow.setCountry(showObject.optString("country", null));
-                        tvShow.setNetwork(showObject.optString("network", null));
-                        tvShow.setStatus(showObject.optString("status", null));
-                        tvShow.setImageThumbnailPath(showObject.optString("image_thumbnail_path", null));
-                        tvShows.add(tvShow);
-                        id++;
-                    }
-                    tvShowRepository.saveAll(tvShows);
-                    logger.log(Level.INFO, "done");
-                }
-            } catch (IOException | JSONException e) {
-                logger.log(Level.INFO, e.getMessage());
-            }
-        }
-        logger.log(Level.INFO, "ALL DONE");
-    }
 }
+

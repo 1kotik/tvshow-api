@@ -21,17 +21,17 @@ import java.util.logging.Logger;
 public class TVShowConfiguration {
     @Bean
     public TVShowService tvShowService(TVShowRepository tvShowRepository, CharacterRepository characterRepository) {
-        return new TVShowService(logger(), tvShowRepository, characterRepository, tvShowCache());
+        return new TVShowService(tvShowRepository, characterRepository, tvShowCache());
     }
 
     @Bean
     public ViewerService viewerService(ViewerRepository viewerRepository, TVShowRepository tvShowRepository) {
-        return new ViewerService(logger(), viewerRepository, tvShowRepository, viewerCache());
+        return new ViewerService(viewerRepository, tvShowRepository, viewerCache());
     }
 
     @Bean
     public CharacterService characterService(CharacterRepository characterRepository, TVShowRepository tvShowRepository) {
-        return new CharacterService(logger(), characterRepository, tvShowRepository, characterCache());
+        return new CharacterService(characterRepository, tvShowRepository, characterCache());
     }
 
     @Bean
