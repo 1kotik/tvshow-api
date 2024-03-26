@@ -70,6 +70,10 @@ public class ViewerService {
             logger.log(Level.INFO, INVALID_INFO_MSG);
             throw new BadRequestException(INVALID_INFO_MSG);
         }
+        for(TVShow tvShow:viewer.getTvShows()){
+
+            for(Character character: tvShow.getCharacters()) character.setTvShow(tvShow);
+        }
         try {
             viewerRepository.save(viewer);
         } catch (Exception e) {
@@ -105,6 +109,9 @@ public class ViewerService {
         if (viewer.getId() == null || viewer.getName() == null || viewer.getName().equals("")) {
             logger.log(Level.INFO, INVALID_INFO_MSG);
             throw new BadRequestException(INVALID_INFO_MSG);
+        }
+        for(TVShow tvShow:viewer.getTvShows()){
+            for(Character character: tvShow.getCharacters()) character.setTvShow(tvShow);
         }
         try {
             if (viewerRepository.findById(viewer.getId()).isPresent()) {

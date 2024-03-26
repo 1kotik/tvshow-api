@@ -2,6 +2,7 @@ package com.javaprojects.tvshowapi.services;
 
 import com.javaprojects.tvshowapi.cache.EntityCache;
 import com.javaprojects.tvshowapi.entities.Character;
+import com.javaprojects.tvshowapi.entities.TVShow;
 import com.javaprojects.tvshowapi.exceptions.BadRequestException;
 import com.javaprojects.tvshowapi.exceptions.NotFoundException;
 import com.javaprojects.tvshowapi.exceptions.ServerException;

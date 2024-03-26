@@ -1,6 +1,7 @@
 package com.javaprojects.tvshowapi.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,17 +13,22 @@ import java.util.Set;
 @Table(name = "viewer")
 @Getter
 @Setter
+@Schema(name = "Viewer")
 public class Viewer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "ID")
     private Long id;
 
+    @Schema(description = "Age", example = "19")
     @Column(name = "age")
     private int age;
 
+    @Schema(description = "Name", example = "Alex")
     @Column(name = "name")
     private String name;
 
+    @Schema(description = "Сountry", example = "Germany")
     @Column(name = "country")
     private String country;
 

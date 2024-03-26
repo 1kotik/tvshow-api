@@ -178,6 +178,8 @@ public class TVShowService {
             logger.log(Level.INFO, INVALID_INFO_MSG);
             throw new BadRequestException(INVALID_INFO_MSG);
         }
+        for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
+        for (Viewer viewer : tvShow.getViewers()) viewer.getTvShows().add(tvShow);
         try {
             if (tvShowRepository.findById(tvShow.getId()).isPresent()) {
                 cache.remove(Objects.hashCode(tvShow.getTitle()));

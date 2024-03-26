@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.servers.Server;
 
-@OpenAPIDefinition(info = @Info(title = "tvshow"), servers = {
+@OpenAPIDefinition(info = @Info(title = "TV Show API"), servers = {
         @Server(url = "http://localhost:8080", description = "Local Server")
 })
 @Configuration
