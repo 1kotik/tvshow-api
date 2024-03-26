@@ -22,10 +22,16 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
-import static com.javaprojects.tvshowapi.utilities.Constants.*;
+import static com.javaprojects.tvshowapi.utilities.Constants.SERVER_ERROR_MSG;
+import static com.javaprojects.tvshowapi.utilities.Constants.INVALID_INFO_MSG;
+import static com.javaprojects.tvshowapi.utilities.Constants.NOT_FOUND_MSG;
 
 
 @AllArgsConstructor

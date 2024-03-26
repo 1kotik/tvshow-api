@@ -14,7 +14,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static com.javaprojects.tvshowapi.utilities.Constants.*;
+import static com.javaprojects.tvshowapi.utilities.Constants.SERVER_ERROR_MSG;
+import static com.javaprojects.tvshowapi.utilities.Constants.INVALID_INFO_MSG;
+import static com.javaprojects.tvshowapi.utilities.Constants.NOT_FOUND_MSG;
 
 @AllArgsConstructor
 public class CharacterService {

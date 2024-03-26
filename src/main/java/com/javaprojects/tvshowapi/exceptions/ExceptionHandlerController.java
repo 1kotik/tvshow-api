@@ -23,7 +23,7 @@ public class ExceptionHandlerController extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(ServerException.class)
-    public ResponseEntity<ExceptionEntity> serverExceptionHandler(ServerException e){
+    public ResponseEntity<ExceptionEntity> serverExceptionHandler(ServerException e) {
         ExceptionEntity details = new ExceptionEntity(new Date(), e.getMessage());
         return new ResponseEntity<>(details, HttpStatus.INTERNAL_SERVER_ERROR);
     }

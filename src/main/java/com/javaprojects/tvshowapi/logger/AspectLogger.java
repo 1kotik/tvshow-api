@@ -27,8 +27,8 @@ public class AspectLogger {
 
     @AfterReturning(pointcut = "execution(* com.javaprojects.tvshowapi.services.*.*(..))", returning = "result")
     public void logAfterServiceCommand(JoinPoint joinPoint, Object result) {
-            logger.info(() -> String.format("Result of %s with args %s: %s", joinPoint.getSignature().getName(),
-                    Arrays.toString(joinPoint.getArgs()), result));
+        logger.info(() -> String.format("Result of %s with args %s: %s", joinPoint.getSignature().getName(),
+                Arrays.toString(joinPoint.getArgs()), result));
     }
 
     @AfterThrowing(pointcut = "execution(* com.javaprojects.tvshowapi.*.*.*(..))", throwing = "exception")

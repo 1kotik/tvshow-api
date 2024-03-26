@@ -6,7 +6,14 @@ import com.javaprojects.tvshowapi.services.TVShowService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.List;
@@ -14,7 +21,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/tvshows")
-@Tag(name="Сериалы", description = "Управляет сериалами")
+@Tag(name = "Сериалы", description = "Управляет сериалами")
 public class TVShowController {
 
     private final TVShowService tvShowService;
@@ -28,11 +35,13 @@ public class TVShowController {
     public List<TVShow> searchByTitleFromAPI(@Parameter(description = "Название сериала") @RequestParam(required = false) String title) throws IOException {
         return tvShowService.searchByTitleFromAPI(title);
     }
+
     @Operation(summary = "Показать все сериалы")
     @GetMapping("/get-all")
-    public List<TVShow> getTVShows(){
+    public List<TVShow> getTVShows() {
         return tvShowService.getTVShows();
     }
+
     @Operation(summary = "Поиск сериалов по названию")
     @GetMapping("/get")
     public List<TVShow> searchByTitle(@Parameter(description = "Название сериала") @RequestParam(required = false) String title) {
