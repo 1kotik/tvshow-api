@@ -32,21 +32,24 @@ public class ViewerService {
     public List<Viewer> getViewers() {
         try {
             List<Viewer> result = viewerRepository.findAll();
-            if (!result.isEmpty()) return result;
+            if (!result.isEmpty()) {
+                return result;
+            }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
         }
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public List<Viewer> searchByName(String name) {
+    public List<Viewer> searchByName(final String name) {
         if (name == null || name.equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         } else {
             int hashCode = Objects.hashCode(name);
             List<Viewer> viewers = cache.get(hashCode);
-            if (viewers != null) return viewers;
-            else {
+            if (viewers != null) {
+                return viewers;
+            } else {
                 try {
                     List<Viewer> result = new ArrayList<>(viewerRepository.searchByName(name));
                     if (!result.isEmpty()) {
@@ -61,11 +64,15 @@ public class ViewerService {
         }
     }
 
-    public void insertViewer(Viewer viewer) {
-        if (viewer.getName() == null || viewer.getName().equals("")) throw new BadRequestException(INVALID_INFO_MSG);
+    public void insertViewer(final Viewer viewer) {
+        if (viewer.getName() == null || viewer.getName().equals("")) {
+            throw new BadRequestException(INVALID_INFO_MSG);
+        }
 
         for (TVShow tvShow : viewer.getTvShows()) {
-            for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
+            for (Character character : tvShow.getCharacters()) {
+                character.setTvShow(tvShow);
+            }
         }
         try {
             viewerRepository.save(viewer);
@@ -75,8 +82,10 @@ public class ViewerService {
         cache.remove(Objects.hashCode(viewer.getName()));
     }
 
-    public void deleteViewer(Long id) {
-        if (id == null) throw new BadRequestException(INVALID_INFO_MSG);
+    public void deleteViewer(final Long id) {
+        if (id == null) {
+            throw new BadRequestException(INVALID_INFO_MSG);
+        }
         try {
             Optional<Viewer> viewer = viewerRepository.findById(id);
             if (viewer.isPresent()) {
@@ -90,11 +99,14 @@ public class ViewerService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public void updateViewer(Viewer viewer) {
-        if (viewer.getId() == null || viewer.getName() == null || viewer.getName().equals(""))
+    public void updateViewer(final Viewer viewer) {
+        if (viewer.getId() == null || viewer.getName() == null || viewer.getName().equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
+        }
         for (TVShow tvShow : viewer.getTvShows()) {
-            for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
+            for (Character character : tvShow.getCharacters()) {
+                character.setTvShow(tvShow);
+            }
         }
         try {
             if (viewerRepository.findById(viewer.getId()).isPresent()) {
@@ -110,8 +122,10 @@ public class ViewerService {
     }
 
     @Transactional
-    public void addToWatched(Long viewerId, Long tvShowId) {
-        if (viewerId == null || tvShowId == null) throw new BadRequestException(INVALID_INFO_MSG);
+    public void addToWatched(final Long viewerId, final Long tvShowId) {
+        if (viewerId == null || tvShowId == null) {
+            throw new BadRequestException(INVALID_INFO_MSG);
+        }
         try {
             Optional<TVShow> tvShow = tvShowRepository.findById(tvShowId);
             Optional<Viewer> viewer = viewerRepository.findById(viewerId);
@@ -125,7 +139,7 @@ public class ViewerService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public Set<TVShow> getWatchedTVShows(Long viewerId) {
+    public Set<TVShow> getWatchedTVShows(final Long viewerId) {
         if (viewerId == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -140,4 +154,3 @@ public class ViewerService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 }
-

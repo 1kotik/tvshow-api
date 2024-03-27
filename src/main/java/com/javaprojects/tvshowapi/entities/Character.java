@@ -35,5 +35,5 @@ public class Character {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tvshow_id")
-    TVShow tvShow;
+    private TVShow tvShow;
 }

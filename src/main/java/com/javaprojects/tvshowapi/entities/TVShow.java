@@ -67,5 +67,5 @@ public class TVShow {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY, mappedBy = "tvShow")
-    Set<Character> characters = new HashSet<>();
+    private Set<Character> characters = new HashSet<>();
 }

@@ -32,32 +32,37 @@ public class CharacterController {
 
     @Operation(summary = "Поиск персонажей по имени")
     @GetMapping("/get")
-    public List<Character> searchByName(@Parameter(description = "Имя персонажа") @RequestParam(required = false) String name) {
+    public List<Character> searchByName(@Parameter(description = "Имя персонажа")
+                                        @RequestParam(required = false) final String name) {
         return characterService.searchByName(name);
     }
 
     @Operation(summary = "Поиск персонажей по названию сериала")
     @GetMapping("/get-by-title")
-    public List<Character> searchByTVShowTitle(@Parameter(description = "Имя персонажа") @RequestParam(required = false) String title) {
+    public List<Character> searchByTVShowTitle(@Parameter(description = "Имя персонажа")
+                                               @RequestParam(required = false) final String title) {
         return characterService.searchByTVShowTitle(title);
     }
 
-    @Operation(summary = "Добавление персонажа", description = "Необходимо указать хотя бы имя персонажа и ID его сериала")
+    @Operation(summary = "Добавление персонажа", description = "Указать хотя бы имя персонажа и ID его сериала")
     @PostMapping("/post")
-    public void insertCharacter(@Parameter(description = "ID сериала") @RequestParam(required = false) Long id,
-                                @Parameter(description = "Тело персонажа") @RequestBody(required = false) Character character) {
+    public void insertCharacter(@Parameter(description = "ID сериала") @RequestParam(required = false) final Long id,
+                                @Parameter(description = "Тело персонажа")
+                                @RequestBody(required = false) final Character character) {
         characterService.insertCharacter(id, character);
     }
 
     @Operation(summary = "Удаление персонажа", description = "Необходимо указать ID персонажа")
     @DeleteMapping("/delete")
-    public void deleteCharacter(@Parameter(description = "ID персонажа") @RequestParam(required = false) Long id) {
+    public void deleteCharacter(@Parameter(description = "ID персонажа")
+                                @RequestParam(required = false) final Long id) {
         characterService.deleteCharacter(id);
     }
 
     @Operation(summary = "Обновить персонажа", description = "Необходимо указать хотя бы ID и имя персонажа")
     @PutMapping("/update")
-    public void updateCharacter(@Parameter(description = "Тело персонажа") @RequestBody(required = false) Character character) {
+    public void updateCharacter(@Parameter(description = "Тело персонажа")
+                                @RequestBody(required = false) final Character character) {
         characterService.updateCharacter(character);
     }
 }

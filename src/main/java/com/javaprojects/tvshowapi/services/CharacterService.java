@@ -29,14 +29,16 @@ public class CharacterService {
     public List<Character> getCharacters() {
         try {
             List<Character> result = characterRepository.findAll();
-            if (!result.isEmpty()) return result;
+            if (!result.isEmpty()) {
+                return result;
+            }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
         }
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public List<Character> searchByName(String name) {
+    public List<Character> searchByName(final String name) {
         if (name == null || name.equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         } else {
@@ -59,7 +61,7 @@ public class CharacterService {
         }
     }
 
-    public void insertCharacter(Long tvShowId, Character character) {
+    public void insertCharacter(final Long tvShowId, final Character character) {
         if (character.getName() == null || character.getName().equals("") || tvShowId == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -76,7 +78,7 @@ public class CharacterService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public void deleteCharacter(Long id) {
+    public void deleteCharacter(final Long id) {
         if (id == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -93,7 +95,7 @@ public class CharacterService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public void updateCharacter(Character character) {
+    public void updateCharacter(final Character character) {
         if (character.getName() == null || character.getName().equals("") || character.getId() == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -111,7 +113,7 @@ public class CharacterService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public List<Character> searchByTVShowTitle(String title) {
+    public List<Character> searchByTVShowTitle(final String title) {
         if (title == null || title.equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         } else {
@@ -127,5 +129,3 @@ public class CharacterService {
         }
     }
 }
-
-

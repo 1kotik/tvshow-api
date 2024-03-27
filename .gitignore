@@ -9,6 +9,8 @@ tvshow-api.iml
 /lib
 /.github
 /src/main/java/com/javaprojects/tvshowapi/models
+log
+log.lck
 
 
 HELP.md

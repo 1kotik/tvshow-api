@@ -1,7 +1,7 @@
 package com.javaprojects.tvshowapi.utilities;
 
 
-public class Constants {
+public final class Constants {
     private Constants() {
 
     }

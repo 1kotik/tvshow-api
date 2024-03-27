@@ -42,9 +42,11 @@ public class TVShowService {
     private EntityCache<Integer, List<TVShow>> cache;
 
 
-    public List<TVShow> searchByTitleFromAPI(String title) throws IOException {
+    public List<TVShow> searchByTitleFromAPI(final String title) throws IOException {
         List<TVShow> results = new ArrayList<>();
-        if (title == null) title = "";
+        if (title == null) {
+            throw new BadRequestException(INVALID_INFO_MSG);
+        }
         String url = String.format("%s?q=%s", API_URL, URLEncoder.encode(title, StandardCharsets.UTF_8));
         try {
 
@@ -94,14 +96,16 @@ public class TVShowService {
     public List<TVShow> getTVShows() {
         try {
             List<TVShow> result = tvShowRepository.findAll();
-            if (!result.isEmpty()) return result;
+            if (!result.isEmpty()) {
+                return result;
+            }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
         }
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public List<TVShow> searchByTitle(String title) {
+    public List<TVShow> searchByTitle(final String title) {
         if (title == null || title.equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         } else {
@@ -124,12 +128,16 @@ public class TVShowService {
         }
     }
 
-    public void insertTVShow(TVShow tvShow) {
+    public void insertTVShow(final TVShow tvShow) {
         if (tvShow.getTitle() == null || tvShow.getTitle().equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
-        for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
-        for (Viewer viewer : tvShow.getViewers()) viewer.getTvShows().add(tvShow);
+        for (Character character : tvShow.getCharacters()) {
+            character.setTvShow(tvShow);
+        }
+        for (Viewer viewer : tvShow.getViewers()) {
+            viewer.getTvShows().add(tvShow);
+        }
         try {
             tvShowRepository.save(tvShow);
         } catch (Exception e) {
@@ -139,7 +147,7 @@ public class TVShowService {
     }
 
     @Transactional
-    public void deleteTVShow(Long id) {
+    public void deleteTVShow(final Long id) {
         if (id == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -160,12 +168,16 @@ public class TVShowService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public void updateTVShow(TVShow tvShow) {
+    public void updateTVShow(final TVShow tvShow) {
         if (tvShow.getTitle() == null || tvShow.getTitle().equals("") || tvShow.getId() == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
-        for (Character character : tvShow.getCharacters()) character.setTvShow(tvShow);
-        for (Viewer viewer : tvShow.getViewers()) viewer.getTvShows().add(tvShow);
+        for (Character character : tvShow.getCharacters()) {
+            character.setTvShow(tvShow);
+        }
+        for (Viewer viewer : tvShow.getViewers()) {
+            viewer.getTvShows().add(tvShow);
+        }
         try {
             if (tvShowRepository.findById(tvShow.getId()).isPresent()) {
                 cache.remove(Objects.hashCode(tvShow.getTitle()));
@@ -179,7 +191,7 @@ public class TVShowService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public Set<Character> getCharacters(Long tvShowId) {
+    public Set<Character> getCharacters(final Long tvShowId) {
         if (tvShowId == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -194,4 +206,3 @@ public class TVShowService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 }
-

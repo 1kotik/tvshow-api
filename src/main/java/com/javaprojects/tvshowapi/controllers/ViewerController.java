@@ -34,39 +34,39 @@ public class ViewerController {
 
     @Operation(summary = "Поиск зрителя по имени")
     @GetMapping("/get")
-    public List<Viewer> searchByName(@Parameter(description = "Имя зрителя") @RequestParam(required = false) String name) {
+    public List<Viewer> searchByName(@Parameter(description = "Имя зрителя")
+                                     @RequestParam(required = false) final String name) {
         return viewerService.searchByName(name);
     }
 
     @Operation(summary = "Поиск просмотренных сериалов", description = "Необходимо указать ID зрителя")
     @GetMapping("/get-watched")
-    public Set<TVShow> getWatchedTVShows(@Parameter(description = "ID зрителя") @RequestParam Long id) {
+    public Set<TVShow> getWatchedTVShows(@Parameter(description = "ID зрителя") @RequestParam final Long id) {
         return viewerService.getWatchedTVShows(id);
     }
 
     @Operation(summary = "Добавление зрителя", description = "Необходимо указать хотя бы имя зрителя")
     @PostMapping("/post")
-    public void insertViewer(@Parameter(description = "Тело зрителя") @RequestBody Viewer viewer) {
+    public void insertViewer(@Parameter(description = "Тело зрителя") @RequestBody final Viewer viewer) {
         viewerService.insertViewer(viewer);
     }
 
     @Operation(summary = "Удаление зрителя", description = "Необходимо указать ID зрителя")
     @DeleteMapping("/delete")
-    public void deleteViewer(@Parameter(description = "ID зрителя") @RequestParam Long id) {
+    public void deleteViewer(@Parameter(description = "ID зрителя") @RequestParam final Long id) {
         viewerService.deleteViewer(id);
     }
 
     @Operation(summary = "Обновление зрителя", description = "Необходимо указать хотя бы ID и имя зрителя")
     @PutMapping("/update")
-    public void updateViewer(@Parameter(description = "Тело зрителя") @RequestBody Viewer viewer) {
+    public void updateViewer(@Parameter(description = "Тело зрителя") @RequestBody final Viewer viewer) {
         viewerService.updateViewer(viewer);
     }
 
     @Operation(summary = "Добавить в просмотренные", description = "Необходимо указать ID зрителя и ID сериала")
     @PutMapping("/add-to-watched")
-    public void addToWatched(@Parameter(description = "ID зрителя") @RequestParam Long vid,
-                             @Parameter(description = "ID сериала") @RequestParam Long tv) {
+    public void addToWatched(@Parameter(description = "ID зрителя") @RequestParam final Long vid,
+                             @Parameter(description = "ID сериала") @RequestParam final Long tv) {
         viewerService.addToWatched(vid, tv);
     }
 }
-
