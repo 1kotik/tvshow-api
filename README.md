@@ -9,10 +9,8 @@ REST API for searching information about TV Shows.
 - [Usage](#usage)
 - [JSON Example](#json-example)
 ## Functional
-- Searching TV Shows by title
+- Searching information about TV Shows
 - Returning results in JSON format
-
-Note: Application can return list of TV Shows with entered title. Also you can provide incomplete title.
 
 ## Technologies:
 - Java
@@ -21,6 +19,8 @@ Note: Application can return list of TV Shows with entered title. Also you can p
 - Maven
 - JPA Hibernate
 - PostgreSQL
+- Swagger
+- Checkstyle
 
 ## Installation
 
