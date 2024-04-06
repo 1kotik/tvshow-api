@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 @Aspect
 @Component
@@ -21,10 +22,11 @@ public class AspectLogger {
     public AspectLogger() {
         this.logger = Logger.getLogger(this.getClass().getName());
         try {
-            FileHandler fh = new FileHandler("log", true);
+            FileHandler fh = new FileHandler("log.log", true);
+            fh.setFormatter(new SimpleFormatter());
             logger.addHandler(fh);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Произошла ошибка при работе с FileHandler.", e);
+            logger.log(Level.WARNING, "Произошла ошибка при работе с FileHandler.", e);
         }
     }
 
