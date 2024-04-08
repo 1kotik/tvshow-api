@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/viewers")
@@ -68,5 +69,10 @@ public class ViewerController {
     public void addToWatched(@Parameter(description = "ID зрителя") @RequestParam final Long vid,
                              @Parameter(description = "ID сериала") @RequestParam final Long tv) {
         viewerService.addToWatched(vid, tv);
+    }
+    @Operation(summary = "Добавление зрителей", description = "Необходимо указать хотя бы имя зрителя")
+    @PostMapping("/post-more")
+    public void insertViewers(@Parameter(description = "Тело") @RequestBody final Viewer[] viewers){
+        Stream.of(viewers).forEach(viewerService::insertViewer);
     }
 }

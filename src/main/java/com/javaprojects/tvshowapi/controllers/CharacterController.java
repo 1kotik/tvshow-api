@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/characters")
@@ -64,5 +65,13 @@ public class CharacterController {
     public void updateCharacter(@Parameter(description = "Тело персонажа")
                                 @RequestBody(required = false) final Character character) {
         characterService.updateCharacter(character);
+    }
+
+    @Operation(summary = "Добавление персонажей", description = "Указать хотя бы имя персонажа и ID его сериала")
+    @PostMapping("/post-more")
+    public void insertCharacters(@Parameter(description = "ID сериала") @RequestParam(required = false) final Long id,
+                                @Parameter(description = "Тело")
+                                @RequestBody(required = false) final Character[] characters){
+        Stream.of(characters).forEach(c->characterService.insertCharacter(id,c));
     }
 }

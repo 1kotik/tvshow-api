@@ -9,10 +9,9 @@ import com.javaprojects.tvshowapi.repositories.CharacterRepository;
 import com.javaprojects.tvshowapi.repositories.TVShowRepository;
 import lombok.AllArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.javaprojects.tvshowapi.utilities.Constants.SERVER_ERROR_MSG;
 import static com.javaprojects.tvshowapi.utilities.Constants.INVALID_INFO_MSG;
@@ -28,7 +27,7 @@ public class CharacterService {
 
     public List<Character> getCharacters() {
         try {
-            List<Character> result = characterRepository.findAll();
+            List<Character> result = characterRepository.findAll().stream().sorted(Comparator.comparing(Character::getId)).collect(Collectors.toList());
             if (!result.isEmpty()) {
                 return result;
             }
@@ -48,7 +47,8 @@ public class CharacterService {
                 return characters;
             } else {
                 try {
-                    List<Character> result = new ArrayList<>(characterRepository.searchByName(name));
+                    //List<Character> result = new ArrayList<>(characterRepository.searchByName(name));
+                    List<Character> result = getCharacters().stream().filter(c -> c.getName().contains(name)).collect(Collectors.toList());
                     if (!result.isEmpty()) {
                         cache.put(hashCode, result);
                         return result;
@@ -118,7 +118,8 @@ public class CharacterService {
             throw new BadRequestException(INVALID_INFO_MSG);
         } else {
             try {
-                List<Character> result = characterRepository.searchByTVShowTitle(title);
+                //List<Character> result = characterRepository.searchByTVShowTitle(title);
+                List<Character> result = getCharacters().stream().filter(c -> c.getTvShow().getTitle().equals(title)).toList();
                 if (!result.isEmpty()) {
                     return result;
                 }

@@ -23,11 +23,8 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.javaprojects.tvshowapi.utilities.Constants.SERVER_ERROR_MSG;
 import static com.javaprojects.tvshowapi.utilities.Constants.INVALID_INFO_MSG;
@@ -95,7 +92,8 @@ public class TVShowService {
 
     public List<TVShow> getTVShows() {
         try {
-            List<TVShow> result = tvShowRepository.findAll();
+            List<TVShow> result = tvShowRepository.findAll().stream()
+                    .sorted((tv1, tv2) -> tv1.getId().compareTo(tv2.getId())).toList();
             if (!result.isEmpty()) {
                 return result;
             }
@@ -115,7 +113,7 @@ public class TVShowService {
                 return tvShows;
             } else {
                 try {
-                    List<TVShow> result = new ArrayList<>(tvShowRepository.searchByTitle(title));
+                    List<TVShow> result = getTVShows().stream().filter(tv -> tv.getTitle().contains(title)).toList();
                     if (!result.isEmpty()) {
                         cache.put(hashCode, result);
                         return result;
@@ -132,12 +130,8 @@ public class TVShowService {
         if (tvShow.getTitle() == null || tvShow.getTitle().equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
-        for (Character character : tvShow.getCharacters()) {
-            character.setTvShow(tvShow);
-        }
-        for (Viewer viewer : tvShow.getViewers()) {
-            viewer.getTvShows().add(tvShow);
-        }
+        tvShow.getCharacters().forEach(c -> c.setTvShow(tvShow));
+        tvShow.getViewers().forEach(v -> v.getTvShows().add(tvShow));
         try {
             tvShowRepository.save(tvShow);
         } catch (Exception e) {
@@ -154,9 +148,7 @@ public class TVShowService {
         try {
             Optional<TVShow> tvShow = tvShowRepository.findById(id);
             if (tvShow.isPresent()) {
-                for (Viewer viewer : tvShow.get().getViewers()) {
-                    viewer.getTvShows().remove(tvShow.get());
-                }
+                tvShow.get().getViewers().forEach(v -> v.getTvShows().remove(tvShow.get()));
                 characterRepository.deleteAll(tvShow.get().getCharacters());
                 cache.remove(Objects.hashCode(tvShow.get().getTitle()));
                 tvShowRepository.deleteById(id);
@@ -172,12 +164,8 @@ public class TVShowService {
         if (tvShow.getTitle() == null || tvShow.getTitle().equals("") || tvShow.getId() == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
-        for (Character character : tvShow.getCharacters()) {
-            character.setTvShow(tvShow);
-        }
-        for (Viewer viewer : tvShow.getViewers()) {
-            viewer.getTvShows().add(tvShow);
-        }
+        tvShow.getCharacters().forEach(c -> c.setTvShow(tvShow));
+        tvShow.getViewers().forEach(v -> v.getTvShows().add(tvShow));
         try {
             if (tvShowRepository.findById(tvShow.getId()).isPresent()) {
                 cache.remove(Objects.hashCode(tvShow.getTitle()));
@@ -196,9 +184,10 @@ public class TVShowService {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
         try {
-            Optional<TVShow> tvShow = tvShowRepository.findById(tvShowId);
-            if (tvShow.isPresent() && !tvShow.get().getCharacters().isEmpty()) {
-                return tvShow.get().getCharacters();
+            Set<Character> result = characterRepository.findAll().stream().sorted(Comparator.comparing(Character::getId))
+                    .filter(c -> c.getTvShow().getId().equals(tvShowId)).collect(Collectors.toCollection(LinkedHashSet::new));
+            if (!result.isEmpty()) {
+                return result;
             }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);

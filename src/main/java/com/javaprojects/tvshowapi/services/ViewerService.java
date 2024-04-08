@@ -13,11 +13,9 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
+import java.io.Console;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.javaprojects.tvshowapi.utilities.Constants.SERVER_ERROR_MSG;
 import static com.javaprojects.tvshowapi.utilities.Constants.INVALID_INFO_MSG;
@@ -31,7 +29,8 @@ public class ViewerService {
 
     public List<Viewer> getViewers() {
         try {
-            List<Viewer> result = viewerRepository.findAll();
+            List<Viewer> result = viewerRepository.findAll().stream()
+                    .sorted(Comparator.comparing(Viewer::getId)).collect(Collectors.toList());
             if (!result.isEmpty()) {
                 return result;
             }
@@ -51,7 +50,7 @@ public class ViewerService {
                 return viewers;
             } else {
                 try {
-                    List<Viewer> result = new ArrayList<>(viewerRepository.searchByName(name));
+                    List<Viewer> result = viewerRepository.findAll().stream().filter(v -> v.getName().contains(name)).collect(Collectors.toList());
                     if (!result.isEmpty()) {
                         cache.put(hashCode, result);
                         return result;
@@ -68,12 +67,7 @@ public class ViewerService {
         if (viewer.getName() == null || viewer.getName().equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
-
-        for (TVShow tvShow : viewer.getTvShows()) {
-            for (Character character : tvShow.getCharacters()) {
-                character.setTvShow(tvShow);
-            }
-        }
+        viewer.getTvShows().forEach(tv -> tv.getCharacters().forEach(c -> c.setTvShow(tv)));
         try {
             viewerRepository.save(viewer);
         } catch (Exception e) {
@@ -103,11 +97,7 @@ public class ViewerService {
         if (viewer.getId() == null || viewer.getName() == null || viewer.getName().equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
-        for (TVShow tvShow : viewer.getTvShows()) {
-            for (Character character : tvShow.getCharacters()) {
-                character.setTvShow(tvShow);
-            }
-        }
+        viewer.getTvShows().forEach(tv -> tv.getCharacters().forEach(c -> c.setTvShow(tv)));
         try {
             if (viewerRepository.findById(viewer.getId()).isPresent()) {
                 cache.remove(Objects.hashCode(viewer.getName()));
@@ -144,9 +134,11 @@ public class ViewerService {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
         try {
-            Optional<Viewer> viewer = viewerRepository.findById(viewerId);
-            if (viewer.isPresent() && !viewer.get().getTvShows().isEmpty()) {
-                return viewer.get().getTvShows();
+            Set<TVShow> result = tvShowRepository.findAll().stream()
+                    .filter(tv -> tv.getViewers().stream().anyMatch(v -> v.getId().equals(viewerId))).collect(Collectors.toSet());
+            //Optional<Viewer> viewer = viewerRepository.findById(viewerId);
+            if (!result.isEmpty()) {
+                return result;
             }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);

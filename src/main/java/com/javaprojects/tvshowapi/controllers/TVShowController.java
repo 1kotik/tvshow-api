@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/tvshows")
@@ -74,5 +75,12 @@ public class TVShowController {
     public void updateTVShow(@Parameter(description = "Тело сериала")
                              @RequestBody(required = false) final TVShow tvShow) {
         tvShowService.updateTVShow(tvShow);
+    }
+
+    @Operation(summary="Добавление нескольких сериалов", description = "Укажите тела сериалов")
+    @PostMapping("/post-more")
+    public void insertTVShows(@Parameter(description = "Тело")
+                                  @RequestBody(required = false) final TVShow[] tvShows){
+        Stream.of(tvShows).forEach(tvShowService::insertTVShow);
     }
 }
