@@ -27,7 +27,8 @@ public class CharacterService {
 
     public List<Character> getCharacters() {
         try {
-            List<Character> result = characterRepository.findAll().stream().sorted(Comparator.comparing(Character::getId)).collect(Collectors.toList());
+            List<Character> result = characterRepository.findAll().stream()
+                    .sorted(Comparator.comparing(Character::getId)).collect(Collectors.toList());
             if (!result.isEmpty()) {
                 return result;
             }
@@ -47,8 +48,8 @@ public class CharacterService {
                 return characters;
             } else {
                 try {
-                    //List<Character> result = new ArrayList<>(characterRepository.searchByName(name));
-                    List<Character> result = getCharacters().stream().filter(c -> c.getName().contains(name)).collect(Collectors.toList());
+                    List<Character> result = getCharacters().stream()
+                            .filter(c -> c.getName().contains(name)).toList();
                     if (!result.isEmpty()) {
                         cache.put(hashCode, result);
                         return result;
@@ -118,7 +119,6 @@ public class CharacterService {
             throw new BadRequestException(INVALID_INFO_MSG);
         } else {
             try {
-                //List<Character> result = characterRepository.searchByTVShowTitle(title);
                 List<Character> result = getCharacters().stream().filter(c -> c.getTvShow().getTitle().equals(title)).toList();
                 if (!result.isEmpty()) {
                     return result;

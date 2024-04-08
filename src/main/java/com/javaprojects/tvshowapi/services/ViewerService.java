@@ -50,7 +50,8 @@ public class ViewerService {
                 return viewers;
             } else {
                 try {
-                    List<Viewer> result = viewerRepository.findAll().stream().filter(v -> v.getName().contains(name)).collect(Collectors.toList());
+                    List<Viewer> result = viewerRepository.findAll().stream()
+                            .filter(v -> v.getName().contains(name)).toList();
                     if (!result.isEmpty()) {
                         cache.put(hashCode, result);
                         return result;
@@ -136,7 +137,6 @@ public class ViewerService {
         try {
             Set<TVShow> result = tvShowRepository.findAll().stream()
                     .filter(tv -> tv.getViewers().stream().anyMatch(v -> v.getId().equals(viewerId))).collect(Collectors.toSet());
-            //Optional<Viewer> viewer = viewerRepository.findById(viewerId);
             if (!result.isEmpty()) {
                 return result;
             }
