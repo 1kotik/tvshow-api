@@ -64,7 +64,7 @@ public class CharacterServiceTest {
 
 
     @Test
-    public void getCharactersTest_Success() {
+    void getCharactersTest_Success() {
         when(characterRepository.findAll()).thenReturn(List.of(character));
 
         List<Character> result = characterService.getCharacters();
@@ -74,21 +74,21 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void getCharactersTest_Error404() {
+    void getCharactersTest_Error404() {
         when(characterRepository.findAll()).thenReturn(new ArrayList<>());
 
         assertThrows(NotFoundException.class, () -> characterService.getCharacters());
     }
 
     @Test
-    public void getCharactersTest_Error500() {
+    void getCharactersTest_Error500() {
         when(characterRepository.findAll()).thenThrow(RuntimeException.class);
 
         assertThrows(ServerException.class, () -> characterService.getCharacters());
     }
 
     @Test
-    public void searchByNameTest_Success() {
+    void searchByNameTest_Success() {
         int hashCode = Objects.hashCode("Alex");
         when(cache.get(hashCode)).thenReturn(null);
         when(characterRepository.findAll().stream().filter(c -> c.getName().equals("Alex")).toList())
@@ -100,7 +100,7 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void searchByNameTest_CacheNotNull() {
+    void searchByNameTest_CacheNotNull() {
         int hashCode = Objects.hashCode("Alex");
         when(cache.get(hashCode)).thenReturn(List.of(character));
         doNothing().when(cache).put(hashCode, List.of(character));
@@ -111,13 +111,13 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void searchByNameTest_Error400() {
+    void searchByNameTest_Error400() {
         assertThrows(BadRequestException.class, () -> characterService.searchByName(""));
         assertThrows(BadRequestException.class, () -> characterService.searchByName(null));
     }
 
     @Test
-    public void searchByNameTest_Error404() {
+    void searchByNameTest_Error404() {
         int hashCode = Objects.hashCode("Alex");
         when(cache.get(hashCode)).thenReturn(null);
         when(characterRepository.findAll().stream().filter(c -> c.getName().equals("Test")).toList())
@@ -127,7 +127,7 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void searchByNameTest_Error500() {
+    void searchByNameTest_Error500() {
         int hashCode = Objects.hashCode("Alex");
         when(cache.get(hashCode)).thenReturn(null);
         when(characterRepository.findAll().stream().filter(c -> c.getName().equals("Alex")).toList())
@@ -137,7 +137,7 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void insertCharacterTest_Success() {
+    void insertCharacterTest_Success() {
         when(tvShowRepository.findById(1L)).thenReturn(Optional.of(tvShow));
         when(characterRepository.save(character)).thenReturn(null);
         doNothing().when(cache).remove(Objects.hashCode(character.getName()));
@@ -149,27 +149,27 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void insertCharacterTest_Error400() {
+    void insertCharacterTest_Error400() {
         Character c = new Character();
         assertThrows(BadRequestException.class, () -> characterService.insertCharacter(null, character));
         assertThrows(BadRequestException.class, () -> characterService.insertCharacter(1L, c));
     }
 
     @Test
-    public void insertCharacterTest_Error404() {
+    void insertCharacterTest_Error404() {
         doReturn(Optional.empty()).when(tvShowRepository).findById(1L);
         assertThrows(NotFoundException.class, () -> characterService.insertCharacter(1L, character));
     }
 
     @Test
-    public void insertCharacterTest_Error500() {
+    void insertCharacterTest_Error500() {
         when(tvShowRepository.findById(1L)).thenThrow(RuntimeException.class);
 
         assertThrows(ServerException.class, () -> characterService.insertCharacter(1L, character));
     }
 
     @Test
-    public void deleteCharacterTest_Success() {
+    void deleteCharacterTest_Success() {
         when(characterRepository.findById(1L)).thenReturn(Optional.of(character));
         doNothing().when(characterRepository).delete(any());
         doNothing().when(cache).remove(Objects.hashCode(character.getName()));
@@ -180,26 +180,26 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void deleteCharacterTest_Error400() {
+    void deleteCharacterTest_Error400() {
         assertThrows(BadRequestException.class, () -> characterService.deleteCharacter(null));
     }
 
     @Test
-    public void deleteCharacterTest_Error404() {
+    void deleteCharacterTest_Error404() {
         when(characterRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> characterService.deleteCharacter(anyLong()));
     }
 
     @Test
-    public void deleteCharacterTest_Error500() {
+    void deleteCharacterTest_Error500() {
         when(characterRepository.findById(anyLong())).thenThrow(RuntimeException.class);
 
         assertThrows(ServerException.class, () -> characterService.deleteCharacter(anyLong()));
     }
 
     @Test
-    public void updateCharacterTest_Success() {
+    void updateCharacterTest_Success() {
         Character characterToUpdate = new Character();
         characterToUpdate.setName("John");
         characterToUpdate.setId(1L);
@@ -215,7 +215,7 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void updateCharacterTest_Error400() {
+    void updateCharacterTest_Error400() {
         Character invalidCharacter = new Character();
         invalidCharacter.setId(1L);
 
@@ -223,21 +223,21 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void updateCharacterTest_Error404() {
+    void updateCharacterTest_Error404() {
         when(characterRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> characterService.updateCharacter(character));
     }
 
     @Test
-    public void updateCharacterTest_Error500() {
+    void updateCharacterTest_Error500() {
         when(characterRepository.findById(anyLong())).thenThrow(RuntimeException.class);
 
         assertThrows(ServerException.class, () -> characterService.updateCharacter(character));
     }
 
     @Test
-    public void searchByTVShowTitleTest_Success() {
+    void searchByTVShowTitleTest_Success() {
         when(characterRepository.findAll().stream()
                 .filter(c -> c.getTvShow().getTitle().equals("Test")).toList()).thenReturn(List.of(character));
 
@@ -247,13 +247,13 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void searchByTVShowTitleTest_Error400() {
+    void searchByTVShowTitleTest_Error400() {
         assertThrows(BadRequestException.class, () -> characterService.searchByTVShowTitle(null));
         assertThrows(BadRequestException.class, () -> characterService.searchByTVShowTitle(""));
     }
 
     @Test
-    public void searchByTVShowTitleTest_Error404() {
+    void searchByTVShowTitleTest_Error404() {
         when(characterRepository.findAll().stream()
                 .filter(c -> c.getTvShow().getTitle().equals("any")).toList()).thenReturn(Collections.emptyList());
 
@@ -261,7 +261,7 @@ public class CharacterServiceTest {
     }
 
     @Test
-    public void searchByTVShowTitleTest_Error500() {
+    void searchByTVShowTitleTest_Error500() {
         when(characterRepository.findAll().stream()
                 .filter(c -> c.getTvShow().getTitle().equals("any")).toList()).thenThrow(RuntimeException.class);
 

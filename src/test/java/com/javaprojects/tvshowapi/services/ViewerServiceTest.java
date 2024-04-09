@@ -64,7 +64,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void getViewersTest_Success() {
+    void getViewersTest_Success() {
         when(viewerRepository.findAll().stream()
                 .sorted(Comparator.comparing(Viewer::getId)).collect(Collectors.toList()))
                 .thenReturn(List.of(viewer));
@@ -75,7 +75,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void getViewersTest_Error404() {
+    void getViewersTest_Error404() {
         when(viewerRepository.findAll().stream()
                 .sorted(Comparator.comparing(Viewer::getId)).collect(Collectors.toList()))
                 .thenReturn(Collections.emptyList());
@@ -84,7 +84,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void getViewersTest_Error500() {
+    void getViewersTest_Error500() {
         when(viewerRepository.findAll().stream()
                 .sorted(Comparator.comparing(Viewer::getId)).collect(Collectors.toList()))
                 .thenThrow(RuntimeException.class);
@@ -93,7 +93,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void searchByNameTest_Success() {
+    void searchByNameTest_Success() {
         String name = "John";
         int hashCode = Objects.hashCode(name);
         when(cache.get(hashCode)).thenReturn(null);
@@ -108,7 +108,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void searchByNameTest_CacheNotNull() {
+    void searchByNameTest_CacheNotNull() {
         String name = "John";
         int hashCode = Objects.hashCode(name);
         when(cache.get(hashCode)).thenReturn(List.of(viewer));
@@ -119,13 +119,13 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void searchByNameTest_Error400() {
+    void searchByNameTest_Error400() {
         assertThrows(BadRequestException.class, () -> viewerService.searchByName(null));
         assertThrows(BadRequestException.class, () -> viewerService.searchByName(""));
     }
 
     @Test
-    public void searchByNameTest_Error404() {
+    void searchByNameTest_Error404() {
         String name = "John";
         int hashCode = Objects.hashCode(name);
         when(cache.get(hashCode)).thenReturn(null);
@@ -137,7 +137,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void searchByNameTest_Error500() {
+    void searchByNameTest_Error500() {
         String name = "John";
         int hashCode = Objects.hashCode(name);
         when(cache.get(hashCode)).thenReturn(null);
@@ -149,7 +149,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void insertViewerTest_Success() {
+    void insertViewerTest_Success() {
         viewer.getTvShows().forEach(tv -> tv.getCharacters().forEach(c -> c.setTvShow(tv)));
         when(viewerRepository.save(viewer)).thenReturn(viewer);
         doNothing().when(cache).remove(Objects.hashCode(viewer.getName()));
@@ -160,7 +160,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void insertViewerTest_Error400() {
+    void insertViewerTest_Error400() {
         Viewer invalidViewer = new Viewer();
         invalidViewer.setId(2L);
 
@@ -168,7 +168,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void insertViewerTest_Error500() {
+    void insertViewerTest_Error500() {
         viewer.getTvShows().forEach(tv -> tv.getCharacters().forEach(c -> c.setTvShow(tv)));
         when(viewerRepository.save(viewer)).thenThrow(RuntimeException.class);
 
@@ -176,7 +176,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void deleteViewerTest_Success() {
+    void deleteViewerTest_Success() {
         when(viewerRepository.findById(anyLong())).thenReturn(Optional.of(viewer));
         doNothing().when(cache).remove(Objects.hashCode(viewer.getName()));
         doNothing().when(viewerRepository).deleteById(anyLong());
@@ -187,26 +187,26 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void deleteViewerTest_Error400() {
+    void deleteViewerTest_Error400() {
         assertThrows(BadRequestException.class, () -> viewerService.deleteViewer(null));
     }
 
     @Test
-    public void deleteViewerTest_Error404() {
+    void deleteViewerTest_Error404() {
         when(viewerRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> viewerService.deleteViewer(anyLong()));
+        assertThrows(NotFoundException.class, () -> viewerService.deleteViewer(1L));
     }
 
     @Test
-    public void deleteViewerTest_Error500() {
+    void deleteViewerTest_Error500() {
         when(viewerRepository.findById(anyLong())).thenThrow(RuntimeException.class);
 
-        assertThrows(ServerException.class, () -> viewerService.deleteViewer(anyLong()));
+        assertThrows(ServerException.class, () -> viewerService.deleteViewer(1L));
     }
 
     @Test
-    public void updateViewerTest_Success() {
+    void updateViewerTest_Success() {
         Viewer viewerToUpdate = new Viewer();
         viewerToUpdate.setId(1L);
         viewerToUpdate.setName("Mary");
@@ -223,7 +223,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void updateViewerTest_Error400() {
+    void updateViewerTest_Error400() {
         Viewer invalidViewer = new Viewer();
         invalidViewer.setId(1L);
 
@@ -231,7 +231,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void updateViewerTest_Error404() {
+    void updateViewerTest_Error404() {
         Viewer viewerToUpdate = new Viewer();
         viewerToUpdate.setId(1L);
         viewerToUpdate.setName("Mary");
@@ -243,7 +243,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void updateViewerTest_Error500() {
+    void updateViewerTest_Error500() {
         Viewer viewerToUpdate = new Viewer();
         viewerToUpdate.setId(1L);
         viewerToUpdate.setName("Mary");
@@ -255,7 +255,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void addToWatchedTest_Success() {
+    void addToWatchedTest_Success() {
         Viewer viewerTest = new Viewer();
         viewerTest.setId(2L);
         viewerTest.setName("Mary");
@@ -269,27 +269,27 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void addToWatchedTest_Error400() {
+    void addToWatchedTest_Error400() {
         assertThrows(BadRequestException.class, () -> viewerService.addToWatched(null, 1L));
         assertThrows(BadRequestException.class, () -> viewerService.addToWatched(1L, null));
     }
 
     @Test
-    public void addToWatchedTest_Error404() {
+    void addToWatchedTest_Error404() {
         when(tvShowRepository.findById(2L)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> viewerService.addToWatched(1L, 2L));
     }
 
     @Test
-    public void addToWatchedTest_Error500() {
+    void addToWatchedTest_Error500() {
         when(tvShowRepository.findById(2L)).thenThrow(RuntimeException.class);
 
         assertThrows(ServerException.class, () -> viewerService.addToWatched(1L, 2L));
     }
 
     @Test
-    public void getWatchedTVShowsTest_Success() {
+    void getWatchedTVShowsTest_Success() {
         when(tvShowRepository.findAll().stream()
                 .filter(tv -> tv.getViewers().stream().anyMatch(v -> v.getId().equals(1L))).collect(Collectors.toList()))
                 .thenReturn(List.of(tvShow));
@@ -300,12 +300,12 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void getWatchedTVShowsTest_Error400() {
+    void getWatchedTVShowsTest_Error400() {
         assertThrows(BadRequestException.class, () -> viewerService.getWatchedTVShows(null));
     }
 
     @Test
-    public void getWatchedTVShowsTest_Error404() {
+    void getWatchedTVShowsTest_Error404() {
         when(tvShowRepository.findAll().stream()
                 .filter(tv -> tv.getViewers().stream().anyMatch(v -> v.getId().equals(1L))).collect(Collectors.toList()))
                 .thenReturn(Collections.emptyList());
@@ -314,7 +314,7 @@ public class ViewerServiceTest {
     }
 
     @Test
-    public void getWatchedTVShowsTest_Error500() {
+    void getWatchedTVShowsTest_Error500() {
         when(tvShowRepository.findAll().stream()
                 .filter(tv -> tv.getViewers().stream().anyMatch(v -> v.getId().equals(1L))).collect(Collectors.toList()))
                 .thenThrow(RuntimeException.class);

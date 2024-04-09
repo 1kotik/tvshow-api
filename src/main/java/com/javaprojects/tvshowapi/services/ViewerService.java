@@ -136,7 +136,7 @@ public class ViewerService {
         }
         try {
             List<TVShow> result = tvShowRepository.findAll().stream()
-                    .filter(tv -> tv.getViewers().stream().anyMatch(v -> v.getId().equals(viewerId))).collect(Collectors.toList());
+                    .filter(tv -> tv.getViewers().stream().anyMatch(v -> v.getId().equals(viewerId))).toList();
             if (!result.isEmpty()) {
                 return result;
             }

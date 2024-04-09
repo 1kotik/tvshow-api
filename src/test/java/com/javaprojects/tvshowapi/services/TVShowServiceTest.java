@@ -65,7 +65,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void getTVShowsTest_Success() {
+    void getTVShowsTest_Success() {
         when(tvShowRepository.findAll().stream()
                 .sorted((tv1, tv2) -> tv1.getId().compareTo(tv2.getId())).toList()).thenReturn(List.of(tvShow));
 
@@ -75,7 +75,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void getTVShowsTest_Error404() {
+    void getTVShowsTest_Error404() {
         when(tvShowRepository.findAll().stream()
                 .sorted((tv1, tv2) -> tv1.getId().compareTo(tv2.getId())).toList()).thenReturn(Collections.emptyList());
 
@@ -83,7 +83,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void getTVShowsTest_Error500() {
+    void getTVShowsTest_Error500() {
         when(tvShowRepository.findAll().stream()
                 .sorted((tv1, tv2) -> tv1.getId().compareTo(tv2.getId())).toList()).thenThrow(RuntimeException.class);
 
@@ -91,7 +91,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void searchByTitleTest_Success() {
+    void searchByTitleTest_Success() {
         String title = "Test";
         int hashCode = Objects.hashCode(title);
         when(cache.get(hashCode)).thenReturn(null);
@@ -105,7 +105,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void searchByTitleTest_CacheNotNull() {
+    void searchByTitleTest_CacheNotNull() {
         String title = "Test";
         int hashCode = Objects.hashCode(title);
         when(cache.get(hashCode)).thenReturn(List.of(tvShow));
@@ -116,13 +116,13 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void searchByTitleTest_Error400() {
+    void searchByTitleTest_Error400() {
         assertThrows(BadRequestException.class, () -> tvShowService.searchByTitle(null));
         assertThrows(BadRequestException.class, () -> tvShowService.searchByTitle(""));
     }
 
     @Test
-    public void searchByTitleTest_Error404() {
+    void searchByTitleTest_Error404() {
         String title = "Test";
         int hashCode = Objects.hashCode(title);
         when(cache.get(hashCode)).thenReturn(null);
@@ -133,7 +133,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void searchByTitleTest_Error500() {
+    void searchByTitleTest_Error500() {
         String title = "Test";
         int hashCode = Objects.hashCode(title);
         when(cache.get(hashCode)).thenReturn(null);
@@ -144,7 +144,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void insertTVShowTest_Success() {
+    void insertTVShowTest_Success() {
         tvShow.getCharacters().forEach(c -> c.setTvShow(tvShow));
         tvShow.getViewers().forEach(v -> v.getTvShows().add(tvShow));
         doReturn(tvShow).when(tvShowRepository).save(tvShow);
@@ -156,7 +156,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void insertTVShowTest_Error400() {
+    void insertTVShowTest_Error400() {
         TVShow invalidTVShow = new TVShow();
         invalidTVShow.setId(2L);
 
@@ -164,7 +164,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void insertTVShowTest_Error500() {
+    void insertTVShowTest_Error500() {
         tvShow.getCharacters().forEach(c -> c.setTvShow(tvShow));
         tvShow.getViewers().forEach(v -> v.getTvShows().add(tvShow));
         doThrow(RuntimeException.class).when(tvShowRepository).save(tvShow);
@@ -173,7 +173,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void deleteTVShowTest_Success() {
+    void deleteTVShowTest_Success() {
         when(tvShowRepository.findById(anyLong())).thenReturn(Optional.of(tvShow));
         tvShow.getViewers().forEach(v -> v.getTvShows().remove(tvShow));
         doNothing().when(characterRepository).deleteAll(tvShow.getCharacters());
@@ -186,26 +186,26 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void deleteTVShowTest_Error400() {
+    void deleteTVShowTest_Error400() {
         assertThrows(BadRequestException.class, () -> tvShowService.deleteTVShow(null));
     }
 
     @Test
-    public void deleteTVShowTest_Error404() {
+    void deleteTVShowTest_Error404() {
         when(tvShowRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> tvShowService.deleteTVShow(anyLong()));
+        assertThrows(NotFoundException.class, () -> tvShowService.deleteTVShow(1L));
     }
 
     @Test
-    public void deleteTVShowTest_Error500() {
+    void deleteTVShowTest_Error500() {
         when(tvShowRepository.findById(anyLong())).thenThrow(RuntimeException.class);
 
-        assertThrows(ServerException.class, () -> tvShowService.deleteTVShow(anyLong()));
+        assertThrows(ServerException.class, () -> tvShowService.deleteTVShow(1L));
     }
 
     @Test
-    public void updateTVShowTest_Success() {
+    void updateTVShowTest_Success() {
         TVShow tvShowToUpdate = new TVShow();
         tvShowToUpdate.setId(1L);
         tvShowToUpdate.setTitle("Any");
@@ -224,7 +224,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void updateTVShowTest_Error400() {
+    void updateTVShowTest_Error400() {
         TVShow invalidTVShow = new TVShow();
         invalidTVShow.setId(1L);
 
@@ -232,21 +232,21 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void updateTVShowTest_Error404() {
+    void updateTVShowTest_Error404() {
         when(tvShowRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> tvShowService.updateTVShow(tvShow));
     }
 
     @Test
-    public void updateTVShowTest_Error500() {
+    void updateTVShowTest_Error500() {
         when(tvShowRepository.findById(anyLong())).thenThrow(RuntimeException.class);
 
         assertThrows(ServerException.class, () -> tvShowService.updateTVShow(tvShow));
     }
 
     @Test
-    public void getCharactersTest_Success() {
+    void getCharactersTest_Success() {
         when(characterRepository.findAll().stream().sorted(Comparator.comparing(Character::getId))
                 .filter(c -> c.getTvShow().getId().equals(1L)).toList())
                 .thenReturn(List.of(character));
@@ -257,12 +257,12 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void getCharactersTest_Error400() {
+    void getCharactersTest_Error400() {
         assertThrows(BadRequestException.class, () -> tvShowService.getCharacters(null));
     }
 
     @Test
-    public void getCharactersTest_Error404() {
+    void getCharactersTest_Error404() {
         when(characterRepository.findAll().stream().sorted(Comparator.comparing(Character::getId))
                 .filter(c -> c.getTvShow().getId().equals(1L)).toList())
                 .thenReturn(Collections.emptyList());
@@ -271,7 +271,7 @@ public class TVShowServiceTest {
     }
 
     @Test
-    public void getCharactersTest_Error500() {
+    void getCharactersTest_Error500() {
         when(characterRepository.findAll().stream().sorted(Comparator.comparing(Character::getId))
                 .filter(c -> c.getTvShow().getId().equals(1L)).toList())
                 .thenThrow(RuntimeException.class);
