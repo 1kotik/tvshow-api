@@ -25,7 +25,7 @@ import java.util.*;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class CharacterServiceTest {
+class CharacterServiceTest {
 
     @Mock
     private CharacterRepository characterRepository;
@@ -188,14 +188,14 @@ public class CharacterServiceTest {
     void deleteCharacterTest_Error404() {
         when(characterRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> characterService.deleteCharacter(anyLong()));
+        assertThrows(NotFoundException.class, () -> characterService.deleteCharacter(1L));
     }
 
     @Test
     void deleteCharacterTest_Error500() {
         when(characterRepository.findById(anyLong())).thenThrow(RuntimeException.class);
 
-        assertThrows(ServerException.class, () -> characterService.deleteCharacter(anyLong()));
+        assertThrows(ServerException.class, () -> characterService.deleteCharacter(1L));
     }
 
     @Test

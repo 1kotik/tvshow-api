@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class TVShowServiceTest {
+class TVShowServiceTest {
     @Mock
     private TVShowRepository tvShowRepository;
 

@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ViewerServiceTest {
+class ViewerServiceTest {
     @Mock
     private ViewerRepository viewerRepository;
 
