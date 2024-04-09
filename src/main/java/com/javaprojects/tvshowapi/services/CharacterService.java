@@ -8,6 +8,7 @@ import com.javaprojects.tvshowapi.exceptions.ServerException;
 import com.javaprojects.tvshowapi.repositories.CharacterRepository;
 import com.javaprojects.tvshowapi.repositories.TVShowRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public class CharacterService {
                 return characters;
             } else {
                 try {
-                    List<Character> result = getCharacters().stream()
+                    List<Character> result = characterRepository.findAll().stream()
                             .filter(c -> c.getName().contains(name)).toList();
                     if (!result.isEmpty()) {
                         cache.put(hashCode, result);
@@ -62,7 +63,7 @@ public class CharacterService {
         }
     }
 
-    public void insertCharacter(final Long tvShowId, final Character character) {
+    public ResponseEntity<String> insertCharacter(final Long tvShowId, final Character character) {
         if (character.getName() == null || character.getName().equals("") || tvShowId == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -71,7 +72,7 @@ public class CharacterService {
                 character.setTvShow(tvShowRepository.findById(tvShowId).get());
                 characterRepository.save(character);
                 cache.remove(Objects.hashCode(character.getName()));
-                return;
+                return ResponseEntity.ok("Character is saved successfully");
             }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
@@ -79,16 +80,16 @@ public class CharacterService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public void deleteCharacter(final Long id) {
+    public ResponseEntity<String> deleteCharacter(final Long id) {
         if (id == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
-        Optional<Character> character = characterRepository.findById(id);
         try {
+            Optional<Character> character = characterRepository.findById(id);
             if (character.isPresent()) {
                 cache.remove(Objects.hashCode(character.get().getName()));
                 characterRepository.deleteById(id);
-                return;
+                return ResponseEntity.ok("Character is deleted successfully");
             }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
@@ -96,7 +97,7 @@ public class CharacterService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public void updateCharacter(final Character character) {
+    public ResponseEntity<String> updateCharacter(final Character character) {
         if (character.getName() == null || character.getName().equals("") || character.getId() == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -106,7 +107,7 @@ public class CharacterService {
                 cache.remove(Objects.hashCode(character.getName()));
                 cache.remove(Objects.hashCode(characterRepository.findById(character.getId()).get().getName()));
                 characterRepository.save(character);
-                return;
+                return ResponseEntity.ok("Character is updated successfully");
             }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
@@ -119,7 +120,8 @@ public class CharacterService {
             throw new BadRequestException(INVALID_INFO_MSG);
         } else {
             try {
-                List<Character> result = getCharacters().stream().filter(c -> c.getTvShow().getTitle().equals(title)).toList();
+                List<Character> result = characterRepository.findAll().stream()
+                        .filter(c -> c.getTvShow().getTitle().equals(title)).toList();
                 if (!result.isEmpty()) {
                     return result;
                 }

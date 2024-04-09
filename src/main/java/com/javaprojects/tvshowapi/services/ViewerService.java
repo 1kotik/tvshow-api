@@ -1,7 +1,6 @@
 package com.javaprojects.tvshowapi.services;
 
 import com.javaprojects.tvshowapi.cache.EntityCache;
-import com.javaprojects.tvshowapi.entities.Character;
 import com.javaprojects.tvshowapi.entities.TVShow;
 import com.javaprojects.tvshowapi.entities.Viewer;
 import com.javaprojects.tvshowapi.exceptions.BadRequestException;
@@ -11,9 +10,9 @@ import com.javaprojects.tvshowapi.repositories.TVShowRepository;
 import com.javaprojects.tvshowapi.repositories.ViewerRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 
 
-import java.io.Console;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -64,20 +63,21 @@ public class ViewerService {
         }
     }
 
-    public void insertViewer(final Viewer viewer) {
+    public ResponseEntity<String> insertViewer(final Viewer viewer) {
         if (viewer.getName() == null || viewer.getName().equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
         viewer.getTvShows().forEach(tv -> tv.getCharacters().forEach(c -> c.setTvShow(tv)));
         try {
             viewerRepository.save(viewer);
+            cache.remove(Objects.hashCode(viewer.getName()));
+            return ResponseEntity.ok("Viewer is inserted successfully");
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
         }
-        cache.remove(Objects.hashCode(viewer.getName()));
     }
 
-    public void deleteViewer(final Long id) {
+    public ResponseEntity<String> deleteViewer(final Long id) {
         if (id == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -86,7 +86,7 @@ public class ViewerService {
             if (viewer.isPresent()) {
                 cache.remove(Objects.hashCode(viewer.get().getName()));
                 viewerRepository.deleteById(id);
-                return;
+                return ResponseEntity.ok("Viewer is deleted successfully");
             }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
@@ -94,7 +94,7 @@ public class ViewerService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public void updateViewer(final Viewer viewer) {
+    public ResponseEntity<String> updateViewer(final Viewer viewer) {
         if (viewer.getId() == null || viewer.getName() == null || viewer.getName().equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -104,7 +104,7 @@ public class ViewerService {
                 cache.remove(Objects.hashCode(viewer.getName()));
                 cache.remove(Objects.hashCode(viewerRepository.findById(viewer.getId()).get().getName()));
                 viewerRepository.save(viewer);
-                return;
+                return ResponseEntity.ok("Viewer us updated successfully");
             }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
@@ -113,7 +113,7 @@ public class ViewerService {
     }
 
     @Transactional
-    public void addToWatched(final Long viewerId, final Long tvShowId) {
+    public ResponseEntity<String> addToWatched(final Long viewerId, final Long tvShowId) {
         if (viewerId == null || tvShowId == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -122,7 +122,7 @@ public class ViewerService {
             Optional<Viewer> viewer = viewerRepository.findById(viewerId);
             if (tvShow.isPresent() && viewer.isPresent() && !viewer.get().getTvShows().contains(tvShow.get())) {
                 viewer.get().getTvShows().add(tvShow.get());
-                return;
+                return ResponseEntity.ok("TV Show is successfully added to viewer");
             }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
@@ -130,13 +130,13 @@ public class ViewerService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public Set<TVShow> getWatchedTVShows(final Long viewerId) {
+    public List<TVShow> getWatchedTVShows(final Long viewerId) {
         if (viewerId == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
         try {
-            Set<TVShow> result = tvShowRepository.findAll().stream()
-                    .filter(tv -> tv.getViewers().stream().anyMatch(v -> v.getId().equals(viewerId))).collect(Collectors.toSet());
+            List<TVShow> result = tvShowRepository.findAll().stream()
+                    .filter(tv -> tv.getViewers().stream().anyMatch(v -> v.getId().equals(viewerId))).collect(Collectors.toList());
             if (!result.isEmpty()) {
                 return result;
             }

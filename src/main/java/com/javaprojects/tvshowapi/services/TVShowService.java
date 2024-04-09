@@ -3,7 +3,6 @@ package com.javaprojects.tvshowapi.services;
 import com.javaprojects.tvshowapi.cache.EntityCache;
 import com.javaprojects.tvshowapi.entities.Character;
 import com.javaprojects.tvshowapi.entities.TVShow;
-import com.javaprojects.tvshowapi.entities.Viewer;
 import com.javaprojects.tvshowapi.exceptions.BadRequestException;
 import com.javaprojects.tvshowapi.exceptions.NotFoundException;
 import com.javaprojects.tvshowapi.exceptions.ServerException;
@@ -18,6 +17,7 @@ import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -113,7 +113,8 @@ public class TVShowService {
                 return tvShows;
             } else {
                 try {
-                    List<TVShow> result = getTVShows().stream().filter(tv -> tv.getTitle().contains(title)).toList();
+                    List<TVShow> result = tvShowRepository.findAll().stream()
+                            .filter(tv -> tv.getTitle().contains(title)).toList();
                     if (!result.isEmpty()) {
                         cache.put(hashCode, result);
                         return result;
@@ -126,7 +127,7 @@ public class TVShowService {
         }
     }
 
-    public void insertTVShow(final TVShow tvShow) {
+    public ResponseEntity<String> insertTVShow(final TVShow tvShow) {
         if (tvShow.getTitle() == null || tvShow.getTitle().equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -134,14 +135,16 @@ public class TVShowService {
         tvShow.getViewers().forEach(v -> v.getTvShows().add(tvShow));
         try {
             tvShowRepository.save(tvShow);
+            cache.remove(Objects.hashCode(tvShow.getTitle()));
+            return ResponseEntity.ok("TV Show is inserted successfully");
+
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
         }
-        cache.remove(Objects.hashCode(tvShow.getTitle()));
     }
 
     @Transactional
-    public void deleteTVShow(final Long id) {
+    public ResponseEntity<String> deleteTVShow(final Long id) {
         if (id == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -152,7 +155,7 @@ public class TVShowService {
                 characterRepository.deleteAll(tvShow.get().getCharacters());
                 cache.remove(Objects.hashCode(tvShow.get().getTitle()));
                 tvShowRepository.deleteById(id);
-                return;
+                return ResponseEntity.ok("TV Show is deleted successfully");
             }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
@@ -160,7 +163,7 @@ public class TVShowService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public void updateTVShow(final TVShow tvShow) {
+    public ResponseEntity<String> updateTVShow(final TVShow tvShow) {
         if (tvShow.getTitle() == null || tvShow.getTitle().equals("") || tvShow.getId() == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
@@ -171,7 +174,7 @@ public class TVShowService {
                 cache.remove(Objects.hashCode(tvShow.getTitle()));
                 cache.remove(Objects.hashCode(tvShowRepository.findById(tvShow.getId()).get().getTitle()));
                 tvShowRepository.save(tvShow);
-                return;
+                return ResponseEntity.ok("TV Show is updated successfully");
             }
         } catch (Exception e) {
             throw new ServerException(SERVER_ERROR_MSG);
@@ -179,13 +182,13 @@ public class TVShowService {
         throw new NotFoundException(NOT_FOUND_MSG);
     }
 
-    public Set<Character> getCharacters(final Long tvShowId) {
+    public List<Character> getCharacters(final Long tvShowId) {
         if (tvShowId == null) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
         try {
-            Set<Character> result = characterRepository.findAll().stream().sorted(Comparator.comparing(Character::getId))
-                    .filter(c -> c.getTvShow().getId().equals(tvShowId)).collect(Collectors.toCollection(LinkedHashSet::new));
+            List<Character> result = characterRepository.findAll().stream().sorted(Comparator.comparing(Character::getId))
+                    .filter(c -> c.getTvShow().getId().equals(tvShowId)).toList();
             if (!result.isEmpty()) {
                 return result;
             }

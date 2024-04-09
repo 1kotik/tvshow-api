@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -52,35 +53,36 @@ public class TVShowController {
 
     @Operation(summary = "Поиск персонажей по ID сериала")
     @GetMapping("/get-characters")
-    public Set<Character> getCharacters(@Parameter(description = "ID сериала")
+    public List<Character> getCharacters(@Parameter(description = "ID сериала")
                                         @RequestParam(required = false) final Long id) {
         return tvShowService.getCharacters(id);
     }
 
     @Operation(summary = "Добавление сериала", description = "Необходимо указать хотя бы название сериала")
     @PostMapping("/post")
-    public void insertTVShow(@Parameter(description = "Тело сериала")
+    public ResponseEntity<String> insertTVShow(@Parameter(description = "Тело сериала")
                              @RequestBody(required = false) final TVShow tvShow) {
-        tvShowService.insertTVShow(tvShow);
+        return tvShowService.insertTVShow(tvShow);
     }
 
     @Operation(summary = "Удаление сериала", description = "Необходимо указать ID сериала")
     @DeleteMapping("/delete")
-    public void deleteTVShow(@Parameter(description = "ID сериала") @RequestParam(required = false) final Long id) {
-        tvShowService.deleteTVShow(id);
+    public ResponseEntity<String> deleteTVShow(@Parameter(description = "ID сериала") @RequestParam(required = false) final Long id) {
+        return tvShowService.deleteTVShow(id);
     }
 
     @Operation(summary = "Обновление сериала", description = "Необходимо указать хотя бы ID и название сериала")
     @PutMapping("/update")
-    public void updateTVShow(@Parameter(description = "Тело сериала")
+    public ResponseEntity<String> updateTVShow(@Parameter(description = "Тело сериала")
                              @RequestBody(required = false) final TVShow tvShow) {
-        tvShowService.updateTVShow(tvShow);
+        return tvShowService.updateTVShow(tvShow);
     }
 
     @Operation(summary="Добавление нескольких сериалов", description = "Укажите тела сериалов")
     @PostMapping("/post-more")
-    public void insertTVShows(@Parameter(description = "Тело")
+    public ResponseEntity<String> insertTVShows(@Parameter(description = "Тело")
                                   @RequestBody(required = false) final TVShow[] tvShows){
         Stream.of(tvShows).forEach(tvShowService::insertTVShow);
+        return ResponseEntity.ok("TV Shows are inserted successfully");
     }
 }

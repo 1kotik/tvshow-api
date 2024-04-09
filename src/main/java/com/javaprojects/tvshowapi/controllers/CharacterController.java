@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -47,31 +48,33 @@ public class CharacterController {
 
     @Operation(summary = "Добавление персонажа", description = "Указать хотя бы имя персонажа и ID его сериала")
     @PostMapping("/post")
-    public void insertCharacter(@Parameter(description = "ID сериала") @RequestParam(required = false) final Long id,
-                                @Parameter(description = "Тело персонажа")
+    public ResponseEntity<String> insertCharacter(@Parameter(description = "ID сериала") @RequestParam(required = false) final Long id,
+                                                  @Parameter(description = "Тело персонажа")
                                 @RequestBody(required = false) final Character character) {
-        characterService.insertCharacter(id, character);
+        return characterService.insertCharacter(id, character);
     }
 
     @Operation(summary = "Удаление персонажа", description = "Необходимо указать ID персонажа")
     @DeleteMapping("/delete")
-    public void deleteCharacter(@Parameter(description = "ID персонажа")
+    public ResponseEntity<String> deleteCharacter(@Parameter(description = "ID персонажа")
                                 @RequestParam(required = false) final Long id) {
-        characterService.deleteCharacter(id);
+        return characterService.deleteCharacter(id);
     }
 
     @Operation(summary = "Обновить персонажа", description = "Необходимо указать хотя бы ID и имя персонажа")
     @PutMapping("/update")
-    public void updateCharacter(@Parameter(description = "Тело персонажа")
+    public ResponseEntity<String> updateCharacter(@Parameter(description = "Тело персонажа")
                                 @RequestBody(required = false) final Character character) {
-        characterService.updateCharacter(character);
+        return characterService.updateCharacter(character);
     }
 
     @Operation(summary = "Добавление персонажей", description = "Указать хотя бы имя персонажа и ID его сериала")
     @PostMapping("/post-more")
-    public void insertCharacters(@Parameter(description = "ID сериала") @RequestParam(required = false) final Long id,
+    public ResponseEntity<String> insertCharacters(@Parameter(description = "ID сериала") @RequestParam(required = false) final Long id,
                                 @Parameter(description = "Тело")
                                 @RequestBody(required = false) final Character[] characters){
         Stream.of(characters).forEach(c->characterService.insertCharacter(id,c));
+
+        return ResponseEntity.ok("Characters are saved successfully");
     }
 }
