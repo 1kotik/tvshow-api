@@ -24,7 +24,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.javaprojects.tvshowapi.utilities.Constants.SERVER_ERROR_MSG;
 import static com.javaprojects.tvshowapi.utilities.Constants.INVALID_INFO_MSG;
@@ -33,62 +32,9 @@ import static com.javaprojects.tvshowapi.utilities.Constants.NOT_FOUND_MSG;
 
 @AllArgsConstructor
 public class TVShowService {
-    private static final String API_URL = "https://www.episodate.com/api/search";
     private final TVShowRepository tvShowRepository;
     private final CharacterRepository characterRepository;
     private EntityCache<Integer, List<TVShow>> cache;
-
-
-    public List<TVShow> searchByTitleFromAPI(final String title) throws IOException {
-        List<TVShow> results = new ArrayList<>();
-        if (title == null) {
-            throw new BadRequestException(INVALID_INFO_MSG);
-        }
-        String url = String.format("%s?q=%s", API_URL, URLEncoder.encode(title, StandardCharsets.UTF_8));
-        try {
-
-            // Выполнение GET запроса
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder().url(url).build();
-            Response response = client.newCall(request).execute();
-
-            // Проверка успешного выполнения запроса
-            if (response.isSuccessful()) {
-                String jsonResponse = response.body().string();
-
-                // Парсинг JSON ответа
-                JSONObject jsonObject = new JSONObject(jsonResponse);
-                JSONArray showsArray = jsonObject.getJSONArray("tv_shows");
-
-                // Преобразование данных в объекты TVShow
-                for (int i = 0; i < showsArray.length(); i++) {
-                    JSONObject showObject = showsArray.getJSONObject(i);
-                    TVShow tvShow = new TVShow();
-                    tvShow.setId(showObject.optLong("id", i + 1L));
-                    tvShow.setTitle(showObject.optString("name", null));
-                    tvShow.setPermalink(showObject.optString("permalink", null));
-                    tvShow.setStartDate(showObject.optString("start_date", null));
-                    tvShow.setEndDate(showObject.optString("end_date", null));
-                    tvShow.setCountry(showObject.optString("country", null));
-                    tvShow.setNetwork(showObject.optString("network", null));
-                    tvShow.setStatus(showObject.optString("status", null));
-                    tvShow.setImageThumbnailPath(showObject.optString("image_thumbnail_path", null));
-                    results.add(tvShow);
-                }
-            }
-        } catch (IOException | JSONException e) {
-            throw new ServerException(SERVER_ERROR_MSG);
-        }
-        if (results.isEmpty()) {
-            throw new NotFoundException(NOT_FOUND_MSG);
-        }
-        try {
-            tvShowRepository.saveAll(results);
-            return results;
-        } catch (Exception e) {
-            throw new ServerException(SERVER_ERROR_MSG);
-        }
-    }
 
     public List<TVShow> getTVShows() {
         try {

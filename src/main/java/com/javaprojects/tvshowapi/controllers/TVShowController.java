@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -29,13 +28,6 @@ public class TVShowController {
 
     private final TVShowService tvShowService;
 
-
-    @Operation(summary = "Поиск сериалов во внешнем API", description = "Результат сохраняется в базу данных")
-    @GetMapping("/get-from-api")
-    public List<TVShow> searchByTitleFromAPI(@Parameter(description = "Название сериала")
-                                             @RequestParam(required = false) final String title) throws IOException {
-        return tvShowService.searchByTitleFromAPI(title);
-    }
 
     @Operation(summary = "Показать все сериалы")
     @GetMapping("/get-all")
