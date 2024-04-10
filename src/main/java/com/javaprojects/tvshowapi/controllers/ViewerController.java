@@ -42,37 +42,37 @@ public class ViewerController {
 
     @Operation(summary = "Поиск просмотренных сериалов", description = "Необходимо указать ID зрителя")
     @GetMapping("/get-watched")
-    public List<TVShow> getWatchedTVShows(@Parameter(description = "ID зрителя") @RequestParam final Long id) {
+    public List<TVShow> getWatchedTVShows(@Parameter(description = "ID зрителя") @RequestParam(required = false) final Long id) {
         return viewerService.getWatchedTVShows(id);
     }
 
     @Operation(summary = "Добавление зрителя", description = "Необходимо указать хотя бы имя зрителя")
     @PostMapping("/post")
-    public ResponseEntity<String> insertViewer(@Parameter(description = "Тело зрителя") @RequestBody final Viewer viewer) {
+    public ResponseEntity<String> insertViewer(@Parameter(description = "Тело зрителя") @RequestBody(required = false) final Viewer viewer) {
         return viewerService.insertViewer(viewer);
     }
 
     @Operation(summary = "Удаление зрителя", description = "Необходимо указать ID зрителя")
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteViewer(@Parameter(description = "ID зрителя") @RequestParam final Long id) {
+    public ResponseEntity<String> deleteViewer(@Parameter(description = "ID зрителя") @RequestParam(required = false) final Long id) {
         return viewerService.deleteViewer(id);
     }
 
     @Operation(summary = "Обновление зрителя", description = "Необходимо указать хотя бы ID и имя зрителя")
     @PutMapping("/update")
-    public ResponseEntity<String> updateViewer(@Parameter(description = "Тело зрителя") @RequestBody final Viewer viewer) {
+    public ResponseEntity<String> updateViewer(@Parameter(description = "Тело зрителя") @RequestBody(required = false) final Viewer viewer) {
         return viewerService.updateViewer(viewer);
     }
 
     @Operation(summary = "Добавить в просмотренные", description = "Необходимо указать ID зрителя и ID сериала")
     @PutMapping("/add-to-watched")
-    public ResponseEntity<String> addToWatched(@Parameter(description = "ID зрителя") @RequestParam final Long vid,
-                             @Parameter(description = "ID сериала") @RequestParam final Long tv) {
+    public ResponseEntity<String> addToWatched(@Parameter(description = "ID зрителя") @RequestParam(required = false) final Long vid,
+                             @Parameter(description = "ID сериала") @RequestParam(required = false) final Long tv) {
         return viewerService.addToWatched(vid, tv);
     }
     @Operation(summary = "Добавление зрителей", description = "Необходимо указать хотя бы имя зрителя")
     @PostMapping("/post-more")
-    public ResponseEntity<String> insertViewers(@Parameter(description = "Тело") @RequestBody final Viewer[] viewers){
+    public ResponseEntity<String> insertViewers(@Parameter(description = "Тело") @RequestBody(required = false) final Viewer[] viewers){
         Stream.of(viewers).forEach(viewerService::insertViewer);
         return ResponseEntity.ok("Viewers are inserted successfully");
     }
