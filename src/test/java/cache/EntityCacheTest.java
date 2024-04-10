@@ -12,7 +12,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Map;
 
-import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
 class EntityCacheTest {
@@ -29,5 +28,11 @@ class EntityCacheTest {
 
         assertEquals("Alex",result);
     }
-    
+
+    @Test
+    void removeTest(){
+        when(cache.remove(1L)).thenReturn("Alex");
+        assertEquals("Alex",cache.remove(1L));
+    }
+
 }
