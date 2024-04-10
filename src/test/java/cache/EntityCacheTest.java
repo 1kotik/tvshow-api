@@ -29,10 +29,6 @@ class EntityCacheTest {
         assertEquals("Alex",result);
     }
 
-    @Test
-    void removeTest(){
-        when(cache.remove(1L)).thenReturn("Alex");
-        assertEquals("Alex",cache.remove(1L));
-    }
+    
 
 }

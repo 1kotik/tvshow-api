@@ -224,10 +224,14 @@ class ViewerServiceTest {
 
     @Test
     void updateViewerTest_Error400() {
-        Viewer invalidViewer = new Viewer();
-        invalidViewer.setId(1L);
+        Viewer invalidViewer1 = new Viewer();
+        invalidViewer1.setId(1L);
 
-        assertThrows(BadRequestException.class, () -> viewerService.updateViewer(invalidViewer));
+        Viewer invalidViewer2 = new Viewer();
+        invalidViewer2.setName("Alex");
+
+        assertThrows(BadRequestException.class, () -> viewerService.updateViewer(invalidViewer1));
+        assertThrows(BadRequestException.class, () -> viewerService.updateViewer(invalidViewer2));
     }
 
     @Test
