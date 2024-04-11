@@ -246,7 +246,7 @@ class CharacterServiceTest {
         assertEquals(List.of(character), result);
     }
 
-    /*@Test
+    @Test
     void searchByTVShowTitleTest_Error400() {
         assertThrows(BadRequestException.class, () -> characterService.searchByTVShowTitle(null));
         assertThrows(BadRequestException.class, () -> characterService.searchByTVShowTitle(""));
@@ -266,7 +266,7 @@ class CharacterServiceTest {
                 .filter(c -> c.getTvShow().getTitle().equals("any")).toList()).thenThrow(RuntimeException.class);
 
         assertThrows(ServerException.class, () -> characterService.searchByTVShowTitle("any"));
-    }*/
+    }
 
 
 }
