@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.javaprojects.tvshowapi.utilities.Constants.SERVER_ERROR_MSG;
 import static com.javaprojects.tvshowapi.utilities.Constants.INVALID_INFO_MSG;
