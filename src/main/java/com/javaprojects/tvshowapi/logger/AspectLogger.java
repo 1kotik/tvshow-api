@@ -36,9 +36,13 @@ public class AspectLogger {
                 Arrays.toString(joinPoint.getArgs())));
     }
 
-    @AfterReturning(pointcut = "execution(* com.javaprojects.tvshowapi.services.*.*(..))")
-    public final void logAfterServiceCommand(final JoinPoint joinPoint) {
-        logger.info(() -> String.format("Result of %s: success ", joinPoint.getSignature().getName()));
+    @AfterReturning(pointcut = "execution(* com.javaprojects.tvshowapi.services.*.*(..))", returning = "result")
+    public final void logAfterServiceCommand(final JoinPoint joinPoint, Object result) {
+        logger.info(() -> String.format("Result of %s: success",
+                joinPoint.getSignature().getName()));
+        if (result != null) {
+            logger.info(() -> String.format("Returned value: %s", result));
+        }
     }
 
     @AfterThrowing(pointcut = "execution(* com.javaprojects.tvshowapi.*.*.*(..))", throwing = "exception")
