@@ -8,25 +8,28 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-@RestController
+@Controller
 @RequestMapping("/characters")
 @AllArgsConstructor
 @Tag(name = "Персонажи", description = "Управляет персонажами сериалов")
 public class CharacterController {
     private final CharacterService characterService;
     private final RequestCounterService requestCounterService;
+
+    @GetMapping
+    public String showMainPage(Model model) {
+        model.addAttribute("name");
+        return "mainPage";
+    }
+
 
     @Operation(summary = "Показать всех персонажей")
     @GetMapping("/get-all")
@@ -37,10 +40,17 @@ public class CharacterController {
 
     @Operation(summary = "Поиск персонажей по имени")
     @GetMapping("/get")
-    public List<Character> searchByName(@Parameter(description = "Имя персонажа")
-                                        @RequestParam(required = false) final String name) {
+    public String searchByName(@Parameter(description = "Имя персонажа")
+                               @RequestParam(required = false) final String name, Model model) {
         requestCounterService.increment();
-        return characterService.searchByName(name);
+        try {
+            List<Character> characters = characterService.searchByName(name);
+            model.addAttribute("characters", characters);
+            return "searchByName";
+        } catch (RuntimeException e) {
+            model.addAttribute("message", e.getMessage());
+            return "error";
+        }
     }
 
     @Operation(summary = "Поиск персонажей по названию сериала")
@@ -53,38 +63,68 @@ public class CharacterController {
 
     @Operation(summary = "Добавление персонажа", description = "Указать хотя бы имя персонажа и ID его сериала")
     @PostMapping("/post")
-    public ResponseEntity<String> insertCharacter(@Parameter(description = "ID сериала")
-                                                  @RequestParam(required = false) final Long id,
-                                                  @Parameter(description = "Тело персонажа")
-                                                  @RequestBody(required = false) final Character character) {
+    public String insertCharacter(@Parameter(description = "ID сериала")
+                                  @ModelAttribute("title") final String title,
+                                  @Parameter(description = "Тело персонажа")
+                                  @ModelAttribute("character") final Character character,
+                                  Model model) {
+        if (title.equals("")) {
+            return "insertCharacter";
+        }
         requestCounterService.increment();
-        return characterService.insertCharacter(id, character);
+        try {
+            ResponseEntity<String> response = characterService.insertCharacter(title, character);
+            model.addAttribute("message", "Персонаж успешно добавлен");
+            return "message";
+        } catch (RuntimeException e) {
+            model.addAttribute("message", e.getMessage());
+            return "error";
+        }
     }
 
     @Operation(summary = "Удаление персонажа", description = "Необходимо указать ID персонажа")
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteCharacter(@Parameter(description = "ID персонажа")
-                                                  @RequestParam(required = false) final Long id) {
+    @GetMapping("/delete")
+    public String deleteCharacter(@Parameter(description = "ID персонажа")
+                                  @RequestParam final Long id, Model model) {
         requestCounterService.increment();
-        return characterService.deleteCharacter(id);
+        try {
+            characterService.deleteCharacter(id);
+        } catch (RuntimeException e) {
+            model.addAttribute("message", e.getMessage());
+            return "error";
+        }
+        model.addAttribute("message", "Персонаж успешно удален");
+        return "message";
+    }
+
+    @GetMapping("/update-redirect")
+    public String showUpdatePage(@RequestParam Long id, Model model) {
+        model.addAttribute("character", characterService.findById(id));
+        return "updateCharacter";
     }
 
     @Operation(summary = "Обновить персонажа", description = "Необходимо указать хотя бы ID и имя персонажа")
-    @PutMapping("/update")
-    public ResponseEntity<String> updateCharacter(@Parameter(description = "Тело персонажа")
-                                                  @RequestBody(required = false) final Character character) {
+    @PostMapping("/update")
+    public String updateCharacter(@Parameter(description = "Тело персонажа") final Character character, Model model) {
         requestCounterService.increment();
-        return characterService.updateCharacter(character);
+        try {
+            characterService.updateCharacter(character);
+        } catch (RuntimeException e) {
+            model.addAttribute("message", e.getMessage());
+            return "error";
+        }
+        model.addAttribute("message", "Персонаж успешно обновлен");
+        return "message";
     }
 
     @Operation(summary = "Добавление персонажей", description = "Указать хотя бы имя персонажа и ID его сериала")
     @PostMapping("/post-more")
     public ResponseEntity<String> insertCharacters(@Parameter(description = "ID сериала")
-                                                   @RequestParam(required = false) final Long id,
+                                                   @RequestParam(required = false) final String title,
                                                    @Parameter(description = "Тело")
                                                    @RequestBody(required = false) final Character[] characters) {
         requestCounterService.increment();
-        Stream.of(characters).forEach(c -> characterService.insertCharacter(id, c));
+        Stream.of(characters).forEach(c -> characterService.insertCharacter(title, c));
         return ResponseEntity.ok("Characters are saved successfully");
     }
 }

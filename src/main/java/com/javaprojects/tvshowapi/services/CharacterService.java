@@ -2,6 +2,7 @@ package com.javaprojects.tvshowapi.services;
 
 import com.javaprojects.tvshowapi.cache.EntityCache;
 import com.javaprojects.tvshowapi.entities.Character;
+import com.javaprojects.tvshowapi.entities.TVShow;
 import com.javaprojects.tvshowapi.exceptions.BadRequestException;
 import com.javaprojects.tvshowapi.exceptions.NotFoundException;
 import com.javaprojects.tvshowapi.exceptions.ServerException;
@@ -42,33 +43,27 @@ public class CharacterService {
         if (name == null || name.equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         } else {
-            int hashCode = Objects.hashCode(name);
-            List<Character> characters = cache.get(hashCode);
-            if (characters != null) {
-                return characters;
-            } else {
                 try {
                     List<Character> result = characterRepository.findAll().stream()
                             .filter(c -> c.getName().contains(name)).toList();
                     if (!result.isEmpty()) {
-                        cache.put(hashCode, result);
                         return result;
                     }
                 } catch (Exception e) {
                     throw new ServerException(SERVER_ERROR_MSG);
                 }
                 throw new NotFoundException(NOT_FOUND_MSG);
-            }
         }
     }
 
-    public ResponseEntity<String> insertCharacter(final Long tvShowId, final Character character) {
-        if (character.getName() == null || character.getName().equals("") || tvShowId == null) {
+    public ResponseEntity<String> insertCharacter(final String title, final Character character) {
+        if (character.getName() == null || character.getName().equals("") || title == null || title.equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         }
         try {
-            if (tvShowRepository.findById(tvShowId).isPresent()) {
-                character.setTvShow(tvShowRepository.findById(tvShowId).get());
+            if (!tvShowRepository.searchByTitle(title).isEmpty()) {
+                TVShow tvShow = tvShowRepository.searchByTitle(title).get(0);
+                character.setTvShow(tvShow);
                 characterRepository.save(character);
                 cache.remove(Objects.hashCode(character.getName()));
                 return ResponseEntity.ok("Character is saved successfully");
@@ -129,5 +124,9 @@ public class CharacterService {
             }
             throw new NotFoundException(NOT_FOUND_MSG);
         }
+    }
+
+    public Character findById(Long id) {
+        return characterRepository.findById(id).get();
     }
 }
