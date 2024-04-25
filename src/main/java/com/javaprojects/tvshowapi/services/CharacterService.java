@@ -43,16 +43,16 @@ public class CharacterService {
         if (name == null || name.equals("")) {
             throw new BadRequestException(INVALID_INFO_MSG);
         } else {
-                try {
-                    List<Character> result = characterRepository.findAll().stream()
-                            .filter(c -> c.getName().contains(name)).toList();
-                    if (!result.isEmpty()) {
-                        return result;
-                    }
-                } catch (Exception e) {
-                    throw new ServerException(SERVER_ERROR_MSG);
+            try {
+                List<Character> result = characterRepository.findAll().stream()
+                        .filter(c -> c.getName().contains(name)).toList();
+                if (!result.isEmpty()) {
+                    return result;
                 }
-                throw new NotFoundException(NOT_FOUND_MSG);
+            } catch (Exception e) {
+                throw new ServerException(SERVER_ERROR_MSG);
+            }
+            throw new NotFoundException(NOT_FOUND_MSG);
         }
     }
 
@@ -127,7 +127,7 @@ public class CharacterService {
     }
 
     public Character findById(Long id) {
-        if(characterRepository.findById(id).isPresent()) return characterRepository.findById(id).get();
-        else return new Character();
+        Optional<Character> character = characterRepository.findById(id);
+        return character.orElseGet(Character::new);
     }
 }
