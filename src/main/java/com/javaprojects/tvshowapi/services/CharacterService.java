@@ -127,6 +127,7 @@ public class CharacterService {
     }
 
     public Character findById(Long id) {
-        return characterRepository.findById(id).get();
+        if(characterRepository.findById(id).isPresent()) return characterRepository.findById(id).get();
+        else return new Character();
     }
 }

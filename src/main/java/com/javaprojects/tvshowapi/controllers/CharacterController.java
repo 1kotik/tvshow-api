@@ -49,7 +49,7 @@ public class CharacterController {
             model.addAttribute("characters", characters);
             return "searchByName";
         } catch (RuntimeException e) {
-            model.addAttribute("message", e.getMessage());
+            model.addAttribute(MESSAGE, e.getMessage());
             return ERROR;
         }
     }

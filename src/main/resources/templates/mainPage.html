@@ -23,6 +23,7 @@
             padding: 30px; /* Add some padding inside the container */
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
             max-width: 500px; /* Set a maximum width for responsiveness */
+            justify-content: center; /* Center the content horizontally */
         }
 
         h1 {
@@ -99,16 +100,17 @@
 </head>
 <body>
 <div class="container">
-    <div align="center">
-        <h1>Введите имя персонажа</h1>
+    <div>
+        <h1>Поиск персонажа</h1>
         <form th:action="@{/characters/get}" method="get">
             <label>
                 <input type="text" th:name="name" class="search-form"/>
+
             </label>
             <button type="submit" class="find-button">Найти</button>
         </form>
     </div>
-    <div align="center">
+    <div>
         <form th:action="@{/characters/post}" method="post">
             <button type="submit" class="add-button">Добавить персонажа</button>
         </form>
