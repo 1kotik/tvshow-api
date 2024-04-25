@@ -80,7 +80,7 @@
         <div th:each="tvshow : ${tvshows}">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title" th:text="${tvshow.title}"><p></p></h5>
+                    <h5 class="card-title" th:text="${tvshow.title}"> </h5><p> </p>
                     <img th:src="${tvshow.imageThumbnailPath}" alt="" class="image"/>
                     <p class="card-text" th:text="'Год выпуска: ' + ${tvshow.startDate}"></p>
                     <p class="card-text" th:text="'Страна: ' + ${tvshow.country}"></p>
