@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Ошибка</title>
+    <style>
+        body {
+            background-color: lightcoral; /* Light gray background */
+            font-family: Arial, sans-serif; /* Choose a preferred font */
+            color: #333; /* Dark gray text color */
+            text-align: center; /* Center text on the page */
+            display: flex; /* Make the body a flex container */
+            flex-direction: column; /* Arrange elements vertically */
+            align-items: center; /* Center elements horizontally */
+            justify-content: center; /* Center elements vertically and horizontally */
+            min-height: 100vh; /* Set a minimum height for the page to fill the viewport */
+        }
+
+        .container {
+            max-width: 500px; /* Limit the container width for responsiveness */
+            margin: 20px auto; /* Add some margin for spacing */
+            padding: 30px; /* Add some padding inside the container */
+            background-color: #fff; /* White background for the content area */
+            border-radius: 10px; /* Rounded corners for a softer look */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        h1 {
+            font-size: 24px; /* Adjust heading size */
+            color: #444; /* Darker gray for the heading */
+        }
+
+        p {
+            font-size: 16px; /* Adjust paragraph size */
+            margin-bottom: 20px; /* Add some space below the paragraph */
+            line-height: 1.6; /* Adjust line height for better readability */
+        }
+
+        form {
+            margin-top: 20px; /* Add some space above the form */
+        }
+
+        button {
+            padding: 10px 20px; /* Adjust button padding */
+            border-radius: 5px; /* Rounded corners for buttons */
+            background-color: #28a745; /* Green background */
+            color: #fff; /* White text color */
+            border: none; /* Remove default button border */
+            cursor: pointer; /* Indicate clickable behavior */
+            transition: background-color 0.3s ease; /* Add a smooth hover effect */
+        }
+
+        button:hover {
+            background-color: #218c3d; /* Darker green on hover */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Ошибка</h1>
+    <p th:text="${message}"></p>
+</div>
+<form action="http://localhost:8080/characters">
+    <button>Вернуться на главную</button>
+</form>
+</body>
+</html>

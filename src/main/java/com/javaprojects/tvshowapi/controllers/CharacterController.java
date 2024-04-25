@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +22,8 @@ import java.util.stream.Stream;
 public class CharacterController {
     private final CharacterService characterService;
     private final RequestCounterService requestCounterService;
+    private static final String ERROR = "error";
+    private static final String MESSAGE = "message";
 
     @GetMapping
     public String showMainPage(Model model) {
@@ -49,7 +50,7 @@ public class CharacterController {
             return "searchByName";
         } catch (RuntimeException e) {
             model.addAttribute("message", e.getMessage());
-            return "error";
+            return ERROR;
         }
     }
 
@@ -73,12 +74,12 @@ public class CharacterController {
         }
         requestCounterService.increment();
         try {
-            ResponseEntity<String> response = characterService.insertCharacter(title, character);
-            model.addAttribute("message", "Персонаж успешно добавлен");
-            return "message";
+            characterService.insertCharacter(title, character);
+            model.addAttribute(MESSAGE, "Персонаж успешно добавлен");
+            return MESSAGE;
         } catch (RuntimeException e) {
-            model.addAttribute("message", e.getMessage());
-            return "error";
+            model.addAttribute(MESSAGE, e.getMessage());
+            return ERROR;
         }
     }
 
@@ -90,11 +91,11 @@ public class CharacterController {
         try {
             characterService.deleteCharacter(id);
         } catch (RuntimeException e) {
-            model.addAttribute("message", e.getMessage());
-            return "error";
+            model.addAttribute(MESSAGE, e.getMessage());
+            return ERROR;
         }
-        model.addAttribute("message", "Персонаж успешно удален");
-        return "message";
+        model.addAttribute(MESSAGE, "Персонаж успешно удален");
+        return MESSAGE;
     }
 
     @GetMapping("/update-redirect")
@@ -110,11 +111,11 @@ public class CharacterController {
         try {
             characterService.updateCharacter(character);
         } catch (RuntimeException e) {
-            model.addAttribute("message", e.getMessage());
-            return "error";
+            model.addAttribute(MESSAGE, e.getMessage());
+            return ERROR;
         }
-        model.addAttribute("message", "Персонаж успешно обновлен");
-        return "message";
+        model.addAttribute(MESSAGE, "Персонаж успешно обновлен");
+        return MESSAGE;
     }
 
     @Operation(summary = "Добавление персонажей", description = "Указать хотя бы имя персонажа и ID его сериала")

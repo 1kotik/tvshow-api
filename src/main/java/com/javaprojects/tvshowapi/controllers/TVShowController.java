@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Stream;
 
-@RestController
+@Controller
 @RequestMapping("/tvshows")
 @AllArgsConstructor
 @Tag(name = "Сериалы", description = "Управляет сериалами")
@@ -33,9 +35,16 @@ public class TVShowController {
 
     @Operation(summary = "Показать все сериалы")
     @GetMapping("/get-all")
-    public List<TVShow> getTVShows() {
+    public String getTVShows(Model model) {
         requestCounterService.increment();
-        return tvShowService.getTVShows();
+        try {
+            List<TVShow> tvShows = tvShowService.getTVShows();
+            model.addAttribute("tvshows", tvShows);
+            return "shows";
+        }catch (RuntimeException e){
+            model.addAttribute("message", e.getMessage());
+            return "error";
+        }
     }
 
     @Operation(summary = "Поиск сериалов по названию")

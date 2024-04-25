@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Результаты</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <style>
+        body {
+            background-color: darkcyan; /* Light gray background */
+            font-family: Arial, sans-serif; /* Preferred font */
+        }
+
+        h1 {
+            color: #444; /* Darker gray for the heading */
+            margin-bottom: 20px; /* Add some space below the heading */
+        }
+
+        /* Styled container */
+        .container {
+            max-width: 900px; /* Set a maximum width for responsiveness */
+            margin: 0 auto; /* Center the container horizontally */
+            padding: 30px; /* Add some padding inside the container */
+            border-radius: 10px; /* Rounded corners for a softer look */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            background-color: lightyellow; /* White background for the content area */
+        }
+
+        .card {
+            border-radius: 10px; /* Rounded corners */
+            transition: transform 0.3s ease; /* Add hover effect */
+        }
+
+        .card:hover {
+            transform: scale(1.02); /* Slight zoom on hover */
+        }
+
+        .card-title {
+            font-size: 18px; /* Adjust title size */
+            color: #333; /* Dark gray for the title */
+            margin-bottom: 10px; /* Add some space below the title */
+        }
+
+        .card-text {
+            font-size: 14px; /* Adjust text size */
+            line-height: 1.6; /* Improve readability */
+        }
+
+        /* Styled buttons */
+        .btn-info,
+        .btn-danger {
+            font-size: 12px; /* Adjust button size */
+            padding: 10px 20px; /* Adjust button padding */
+            border-radius: 5px; /* Rounded corners for buttons */
+            background-color: #28a745; /* Green background for info button */
+            color: #fff; /* White text color */
+            border: none; /* Remove default button border */
+            cursor: pointer; /* Indicate clickable behavior */
+            transition: background-color 0.3s ease; /* Add hover effect */
+        }
+
+        .btn-danger {
+            background-color: #dc3545; /* Red background for danger button */
+        }
+
+        .btn-info:hover{
+            background-color: #1d733c; /* Darker green on hover for info button */
+        }
+        .btn-danger:hover {
+            background-color: #b02a37; /* Darker red on hover for danger button */
+        }
+        .btn-secondary{
+            font-size: 12px; /* Adjust button size */
+            padding: 10px 20px; /* Adjust button padding */
+            border-radius: 5px; /* Rounded corners for buttons */
+            background-color: darkblue;
+            color: #fff; /* White text color */
+            border: none; /* Remove default button border */
+            cursor: pointer; /* Indicate clickable behavior */
+            transition: background-color 0.3s ease; /* Add hover effect */
+        }
+        .btn-secondary:hover{
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="text-center">Результаты поиска</h1>
+        <a class="btn btn-secondary" th:href="@{/characters}">Вернуться на главную</a>
+    </div>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        <div th:each="character : ${characters}">
+            <div class="col">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${character.name}"></h5>
+                        <p class="card-text" th:text="'Особенность: ' + ${character.feature}"></p>
+                        <p class="card-text" th:text="'Сериал: ' + ${character.tvShow.title}"></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a class="btn btn-sm btn-info" th:href="@{/characters/update-redirect(id=${character.id})}">Изменить</a>
+                            <a class="btn btn-sm btn-danger"
+                               th:href="@{/characters/delete(id=${character.id})}">Удалить</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

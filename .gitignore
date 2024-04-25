@@ -1,6 +1,5 @@
 mvnw
 mvnw.cmd
-/src/main/resources
 /target
 tvshow-api.iml
 /.idea
