@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  app:
+    image: 'sha256:bd21b4ed6b900e7160c177cc6d2dd6a280ea1f3cfdff8e486168cbd992ec4a06'
+    container_name: app
+    ports:
+      - '8080:8080'
+    environment:
+      - DB_USER=postgres
+      - DB_PASSWORD=5409
+      - DB_URL=jdbc:postgresql://db:5432/postgres
+    depends_on:
+      - db
+  db:
+    image: 'postgres'
+    container_name: db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=5409

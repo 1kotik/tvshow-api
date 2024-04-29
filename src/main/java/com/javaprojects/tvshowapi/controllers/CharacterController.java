@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -45,7 +46,12 @@ public class CharacterController {
                                @RequestParam(required = false) final String name, Model model) {
         requestCounterService.increment();
         try {
-            List<Character> characters = characterService.searchByName(name);
+            List<Character> characters;
+            if (name.equals("")) {
+                characters = characterService.getCharacters();
+            } else {
+                characters = characterService.searchByName(name);
+            }
             model.addAttribute("characters", characters);
             return "searchByName";
         } catch (RuntimeException e) {
