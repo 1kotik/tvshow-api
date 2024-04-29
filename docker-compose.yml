@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   app:
-    image: 'sha256:bd21b4ed6b900e7160c177cc6d2dd6a280ea1f3cfdff8e486168cbd992ec4a06'
+    image: 'sha256:490aa39566296af4d8770c88ff698b7f527a975d8f4d3de628eab583fbb6f8de'
     container_name: app
     ports:
       - '8080:8080'
