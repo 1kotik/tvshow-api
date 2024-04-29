@@ -62,7 +62,7 @@
     <h1>:)</h1>
     <p th:text="${message}"></p>
 </div>
-<form action="http://localhost:8080/characters">
+<form th:action="@{/characters}" method="get">
     <button>Вернуться на главную</button>
 </form>
 </body>
