@@ -7,14 +7,16 @@ services:
     ports:
       - '8080:8080'
     environment:
-      - DB_USER=postgres
-      - DB_PASSWORD=5409
+      - DB_USER=$USER
+      - DB_PASSWORD=$PASSWORD
       - DB_URL=jdbc:postgresql://db:5432/postgres
+    env_file: ./.env
     depends_on:
       - db
   db:
     image: 'postgres'
     container_name: db
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=5409
+      - POSTGRES_USER=$USER
+      - POSTGRES_PASSWORD=$PASSWORD
+    env_file: ./.env

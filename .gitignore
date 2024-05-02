@@ -20,7 +20,7 @@ log.log.lck
 
 
 HELP.md
-
+.env
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
